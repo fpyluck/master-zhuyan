@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claude.local/master-zhuyan/source_map.schema.json",
+  "title": "MasterZhuyan Source Map",
+  "description": "Maps usable source material to topics, evidence, gaps, and contradictions before teaching synthesis.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "map_id": {
+      "type": "string",
+      "description": "Stable identifier for this source map."
+    },
+    "topic_title": {
+      "type": "string"
+    },
+    "source_intake_mode": {
+      "type": "string",
+      "enum": ["pasted_text", "image", "file", "repository", "retrieval", "mixed", "none"]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      },
+      "default": []
+    },
+    "coverage": {
+      "type": "array",
+      "description": "Topic-level coverage summary across sources.",
+      "items": {
+        "$ref": "#/$defs/coverage_item"
+      },
+      "default": []
+    },
+    "global_gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "contradictions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contradiction"
+      },
+      "default": []
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": ["map_id", "topic_title", "sources"],
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "source_type": {
+          "type": "string",
+          "enum": ["pasted_text", "image", "pdf", "doc", "markdown", "web", "repository_file", "dataset", "audio_video", "other"]
+        },
+        "locator": {
+          "type": "string",
+          "description": "Path, URL, page range, screenshot label, or other retraceable location."
+        },
+        "title": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "reliability": {
+          "type": "string",
+          "enum": ["primary", "secondary", "learner_note", "uncertain", "unknown"]
+        },
+        "usable_topics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "must_preserve": {
+          "type": "array",
+          "description": "Definitions, numbers, formulas, criteria, warnings, examples, or original wording that should not be blurred.",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "evidence_card_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "required": ["source_id", "source_type", "locator"]
+    },
+    "coverage_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "topic": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["covered", "partial", "missing", "contradictory", "needs_verification"]
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": ["topic", "status"]
+    },
+    "contradiction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contradiction_id": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "impact": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "handling": {
+          "type": "string",
+          "description": "How the teaching output should label or handle this conflict."
+        }
+      },
+      "required": ["summary", "source_ids"]
+    }
+  }
+}

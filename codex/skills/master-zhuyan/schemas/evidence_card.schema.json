@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex.local/master-zhuyan/evidence_card.schema.json",
+  "title": "MasterZhuyan Evidence Card",
+  "description": "A small source-grounded unit that connects a claim, locator, confidence, and teaching use.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "card_id": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "locator": {
+      "type": "string",
+      "description": "Page, line, timestamp, heading, URL fragment, screenshot region, or other retraceable pointer."
+    },
+    "claim": {
+      "type": "string",
+      "description": "The teachable proposition supported or challenged by this evidence."
+    },
+    "evidence_type": {
+      "type": "string",
+      "enum": ["definition", "mechanism", "classification", "formula", "threshold", "procedure", "example", "warning", "exception", "case", "quote", "data", "counterpoint", "other"]
+    },
+    "source_text": {
+      "type": "string",
+      "description": "Short excerpt only when legally and practically appropriate; otherwise use summary."
+    },
+    "summary": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "unknown"]
+    },
+    "stance": {
+      "type": "string",
+      "enum": ["supports", "qualifies", "contradicts", "context"]
+    },
+    "teaching_use": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["core_explanation", "memory_anchor", "comparison", "easy_error_repair", "boundary", "example", "quality_check"]
+      },
+      "default": []
+    },
+    "related_question_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": ["card_id", "source_id", "claim"]
+}

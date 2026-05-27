@@ -1,0 +1,272 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex.local/master-zhuyan/knowledge_model.schema.json",
+  "title": "MasterZhuyan Knowledge Model",
+  "description": "Expert-teacher model of the topic: concepts, relations, mechanisms, contrasts, memory anchors, and transfer boundaries.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "model_id": {
+      "type": "string"
+    },
+    "topic_title": {
+      "type": "string"
+    },
+    "research_brief_ref": {
+      "type": "string"
+    },
+    "source_map_ref": {
+      "type": "string"
+    },
+    "core_spine": {
+      "type": "string",
+      "description": "The smallest backbone that makes the topic make sense."
+    },
+    "concepts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/concept"
+      },
+      "default": []
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relation"
+      },
+      "default": []
+    },
+    "mechanisms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/mechanism"
+      },
+      "default": []
+    },
+    "comparisons": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/comparison"
+      },
+      "default": []
+    },
+    "precision_anchors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/anchor"
+      },
+      "default": []
+    },
+    "memory_anchors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/anchor"
+      },
+      "default": []
+    },
+    "easy_errors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/easy_error"
+      },
+      "default": []
+    },
+    "transfer_boundaries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/boundary"
+      },
+      "default": []
+    },
+    "unresolved_gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": ["model_id", "topic_title", "core_spine"],
+  "$defs": {
+    "concept": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "concept_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "definition": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "evidence_card_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "required": ["name"]
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "relation_type": {
+          "type": "string",
+          "enum": ["causes", "depends_on", "part_of", "contrasts_with", "precedes", "enables", "limits", "explains", "other"]
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "evidence_card_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "required": ["from", "to", "relation_type"]
+    },
+    "mechanism": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mechanism_id": {
+          "type": "string"
+        },
+        "baseline": {
+          "type": "string"
+        },
+        "trigger_or_condition": {
+          "type": "string"
+        },
+        "process": {
+          "type": "string"
+        },
+        "result": {
+          "type": "string"
+        },
+        "boundary": {
+          "type": "string"
+        },
+        "evidence_card_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "required": ["process"]
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2
+        },
+        "decisive_criterion": {
+          "type": "string"
+        },
+        "common_confusion": {
+          "type": "string"
+        },
+        "evidence_card_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "required": ["items", "decisive_criterion"]
+    },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "anchor_id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "why_it_matters": {
+          "type": "string"
+        },
+        "evidence_card_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "required": ["text"]
+    },
+    "easy_error": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "wrong_pattern": {
+          "type": "string"
+        },
+        "why_wrong": {
+          "type": "string"
+        },
+        "repair": {
+          "type": "string"
+        },
+        "trigger_clue": {
+          "type": "string"
+        },
+        "evidence_card_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "required": ["wrong_pattern", "repair"]
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "can_transfer_to": {
+          "type": "string"
+        },
+        "cannot_transfer_to": {
+          "type": "string"
+        },
+        "missing_information": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

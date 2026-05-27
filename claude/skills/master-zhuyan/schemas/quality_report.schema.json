@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claude.local/master-zhuyan/quality_report.schema.json",
+  "title": "MasterZhuyan Quality Report",
+  "description": "Validation contract for source fidelity, teaching value, longform completeness, and iteration decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "report_id": {
+      "type": "string"
+    },
+    "topic_title": {
+      "type": "string"
+    },
+    "lesson_plan_ref": {
+      "type": "string"
+    },
+    "final_output_ref": {
+      "type": "string"
+    },
+    "overall_status": {
+      "type": "string",
+      "enum": ["pass", "pass_with_notes", "revise", "blocked"]
+    },
+    "gate_results": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/gate_result"
+      },
+      "default": []
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      },
+      "default": []
+    },
+    "planner_iteration": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "requested_updates": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      }
+    },
+    "known_limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": ["report_id", "overall_status"],
+  "$defs": {
+    "gate_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gate": {
+          "type": "string",
+          "enum": ["delivery", "chapter_value", "coverage", "source_uncertainty", "teaching_value", "multi_agent", "prep_template", "taste"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pass", "warn", "fail", "not_applicable"]
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": ["gate", "status"]
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "finding_id": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["info", "minor", "major", "blocking"]
+        },
+        "artifact_ref": {
+          "type": "string",
+          "description": "File path, chapter id, source id, evidence card id, or section reference."
+        },
+        "issue": {
+          "type": "string"
+        },
+        "suggested_action": {
+          "type": "string"
+        },
+        "source_needed": {
+          "type": "string"
+        }
+      },
+      "required": ["severity", "issue"]
+    }
+  }
+}

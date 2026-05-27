@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex.local/master-zhuyan/research_brief.schema.json",
+  "title": "MasterZhuyan Research Brief",
+  "description": "Planner contract for turning a learner request and source map into research questions, teaching spine, and iteration triggers.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "brief_id": {
+      "type": "string"
+    },
+    "topic_title": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "user_goal": {
+      "type": "string",
+      "description": "Remember, understand, compare, apply, review, create durable notes, resolve confusion, or mixed."
+    },
+    "learner_bottleneck": {
+      "type": "string"
+    },
+    "source_map_ref": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "audience_level": {
+          "type": "string"
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "unknown"]
+        }
+      }
+    },
+    "research_questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/research_question"
+      },
+      "default": []
+    },
+    "selected_spine": {
+      "type": "string",
+      "description": "The causal, structural, procedural, or contrastive backbone for synthesis."
+    },
+    "chapter_emphasis": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["memory", "understanding", "comparison", "easy_error", "source_uncertainty", "application", "review"]
+      },
+      "default": []
+    },
+    "must_preserve_details": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "precision_anchors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "iteration_triggers": {
+      "type": "array",
+      "description": "Conditions that require returning to Planner before drafting.",
+      "items": {
+        "type": "string",
+        "enum": ["insufficient_sources", "contradiction_blocks_spine", "missing_precision_anchor", "scope_too_broad", "high_risk_claim_needs_verification", "chapter_plan_repeats_itself", "user_goal_unclear"]
+      },
+      "default": []
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": ["brief_id", "topic_title", "user_goal"],
+  "$defs": {
+    "research_question": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "question_id": {
+          "type": "string"
+        },
+        "question": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": ["definition", "mechanism", "classification", "procedure", "comparison", "evidence", "boundary", "easy_error", "memory", "application"]
+        },
+        "required_source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "status": {
+          "type": "string",
+          "enum": ["open", "answered", "partial", "blocked"]
+        }
+      },
+      "required": ["question"]
+    }
+  }
+}

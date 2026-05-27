@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex.local/master-zhuyan/lesson_plan.schema.json",
+  "title": "MasterZhuyan Lesson Plan",
+  "description": "Longform teaching plan that binds research evidence and knowledge model to chapters, deliverables, and review tasks.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "plan_id": {
+      "type": "string"
+    },
+    "topic_title": {
+      "type": "string"
+    },
+    "research_brief_ref": {
+      "type": "string"
+    },
+    "knowledge_model_ref": {
+      "type": "string"
+    },
+    "learner_goal": {
+      "type": "string"
+    },
+    "teaching_positioning": {
+      "type": "string",
+      "description": "One or two sentences describing how this lesson should help the learner think better."
+    },
+    "chapter_plan": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/chapter"
+      },
+      "default": []
+    },
+    "deliverables": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/deliverable"
+      },
+      "default": []
+    },
+    "review_tasks": {
+      "type": "array",
+      "description": "Checks to run before final merge.",
+      "items": {
+        "$ref": "#/$defs/review_task"
+      },
+      "default": []
+    },
+    "chat_delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "must_include": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["created_paths", "reading_order", "validation_status", "known_limitations"]
+          },
+          "default": ["created_paths", "reading_order", "validation_status"]
+        },
+        "style": {
+          "type": "string",
+          "enum": ["concise", "normal"]
+        }
+      }
+    },
+    "iteration_triggers": {
+      "type": "array",
+      "description": "Plan-level reasons to return to Planner before drafting or merging.",
+      "items": {
+        "type": "string",
+        "enum": ["chapter_has_no_learning_value", "chapter_overlap", "missing_source_for_claim", "unresolved_contradiction", "unclear_audience", "deliverable_route_invalid"]
+      },
+      "default": []
+    }
+  },
+  "required": ["plan_id", "topic_title", "chapter_plan"],
+  "$defs": {
+    "chapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "chapter_id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "emphasis": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["memory", "understanding", "comparison", "easy_error", "source_uncertainty", "application", "review"]
+          },
+          "default": []
+        },
+        "input_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "required_anchors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "output_path": {
+          "type": "string"
+        },
+        "completion_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "required": ["chapter_id", "title", "purpose"]
+    },
+    "deliverable": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["manifest", "index", "chapter", "final_merged", "validation_note", "asset", "other"]
+        },
+        "path": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["planned", "drafted", "validated", "final"]
+        }
+      },
+      "required": ["kind", "path"]
+    },
+    "review_task": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "type": "string"
+        },
+        "gate": {
+          "type": "string",
+          "enum": ["delivery", "chapter_value", "coverage", "source_uncertainty", "teaching_value", "multi_agent", "prep_template", "taste"]
+        },
+        "question": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string",
+          "enum": ["planner", "drafter", "reviewer", "integrator"]
+        }
+      },
+      "required": ["gate", "question"]
+    }
+  }
+}
