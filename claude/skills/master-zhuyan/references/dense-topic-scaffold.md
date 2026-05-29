@@ -32,11 +32,10 @@ Use this order:
 
 When there are many categories, build a branch map:
 
-root concept -> branch criterion -> branch 1 -> key marker -> use/risk
-root concept -> branch criterion -> branch 2 -> key marker -> use/risk
-root concept -> branch criterion -> branch 3 -> key marker -> use/risk
+root concept -> branch criterion -> branch item -> key marker -> use/risk
+(emit one row per source-supported branch; do not cap at three)
 
-Do not list branches without explaining the classification criterion.
+Each branch row carries its classification criterion, key marker, and use/risk so the criterion can flow into `required_anchors` or chapter prose.
 
 ## Formula-heavy scaffold
 
