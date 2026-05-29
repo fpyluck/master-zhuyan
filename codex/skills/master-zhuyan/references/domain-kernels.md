@@ -1,12 +1,13 @@
 # Domain kernels
 
-Use these kernels as completeness checks. Select only the relevant domain.
+Use these kernels as completeness checks. Select only the relevant domain; they are not chapter templates.
+
+Domain kernels supply coverage order only. Domain-sensitive claims--doses, thresholds, jurisdictions, current rules, recommendation grades, prices/current facts, software behavior, and professional or case-specific recommendations--flow through the Evidence Ledger as precision anchors. Missing or unsupported specifics become unavailable claims, integrator actions, or continuation targets; the final teaching stays conceptual unless the source material explicitly covers the professional decision boundary and the learning goal is analyzing it as a topic.
 
 ## Medicine and health
 
-definition -> epidemiology/risk factors when supplied -> anatomy/physiology basis -> pathogenesis -> clinical manifestations -> key tests -> diagnosis -> differential diagnosis -> treatment principles -> procedures/surgery if relevant -> contraindications/cautions -> complications -> follow-up/prevention -> high-risk warning
+definition -> epidemiology/risk factors when supplied -> anatomy/physiology basis -> pathogenesis -> clinical manifestations -> key tests -> diagnosis -> differential diagnosis -> treatment principles -> procedures/surgery if relevant -> contraindications/cautions -> complications -> follow-up/prevention -> boundary
 
-Do not invent doses, guideline years, recommendation grades, or patient-specific decisions. Mark missing source information.
 
 ## Mathematics
 
@@ -26,19 +27,17 @@ task -> input/output -> representation -> model/algorithm -> training or executi
 
 ## Law and policy
 
-rule purpose -> legal source when supplied -> protected interest -> elements/conditions -> exceptions -> burden/standard if supplied -> legal consequence -> risk point -> similar rule contrast -> learning-only caution
+rule purpose -> legal source when supplied -> protected interest -> elements/conditions -> exceptions -> burden/standard if supplied -> legal consequence -> risk point -> similar rule contrast -> boundary
 
-Do not invent jurisdictions, current statutes, or legal consequences beyond the supplied source.
 
 ## Business, finance, and management
 
 business problem -> objective -> actors -> variables/drivers -> decision logic -> metric -> implementation path -> tradeoffs -> risk -> feedback loop -> common misuse
 
-For investment/finance, avoid personalized advice and separate conceptual learning from current market facts.
 
 ## Humanities and history
 
-background -> actors/terms -> causes -> process -> key events/texts -> consequences -> interpretations -> controversy -> influence -> comparison -> evaluation boundary
+background -> actors/terms -> causes -> process -> key events/texts -> consequences -> interpretations -> controversy -> influence -> comparison -> boundary
 
 ## Language learning
 
