@@ -1,10 +1,10 @@
 # Teaching advantage lenses
 
-Use these as silent lenses only. They should enrich the answer, not become extra visible sections.
+Use these as silent lenses only. They should enrich the chapter or final asset, not become extra visible sections.
 
 ## 1. Problem framing lens
 
-Identify which problem the answer must solve:
+Identify which learning problem the asset must solve:
 
 1. define the concept;
 2. explain the mechanism;
@@ -13,7 +13,8 @@ Identify which problem the answer must solve:
 5. create recall anchors;
 6. produce durable notes.
 
-Match the visible answer to that problem.
+Match the chapter emphasis and final asset to that problem.
+These are diagnostic prompts, not Knowledge Model fields.
 
 ## 2. Misconception repair lens
 
@@ -26,29 +27,21 @@ Actively look for likely false understandings:
 5. using the right formula or method under the wrong condition;
 6. memorizing a category without knowing the branch criterion.
 
-Place repairs naturally in 易错点、鉴别对比、为什么这样判断、常见失败原因, or a brief warning.
+Place repairs where the rebuttal naturally fits the chapter's argument: mechanism explanation, contrast, or decision criterion. Misconception repair is a lens applied to existing chapter content, not a new visible section.
 
 ## 3. Precision sentinel
 
-Protect details that should not be blurred:
+Watch for details that lose teaching value when blurred: thresholds and numbers, formulas and units, named criteria, contraindications, version/source-sensitive claims, domain-specific terms, and uncertainty labels.
 
-1. thresholds and numbers;
-2. formulas and units;
-3. named criteria;
-4. contraindications or prohibitions;
-5. version/source-sensitive claims;
-6. domain-specific terms;
-7. uncertainty labels.
-
-If precision is unavailable, say it is unavailable.
+Each such detail flows into the Evidence Ledger as a precision anchor. If the source supplies it, it appears in the final asset with its anchor; if not, it becomes an unavailable claim, integrator action, or continuation target. The sentinel never invents the missing value.
 
 ## 4. Dense-topic invariant lens
 
-For complex topics, keep this invariant in the answer somewhere:
+For complex topics, keep this invariant in the chapter logic somewhere:
 
 problem -> baseline -> disturbance -> mechanism -> result -> recognition -> handling -> boundary
 
-Do not show the chain mechanically if a smoother explanation works better.
+The chain is a logic check, not a visible template; prose may reorder or compress steps so long as each anchor survives in the argument.
 
 ## 5. Transfer frontier lens
 
