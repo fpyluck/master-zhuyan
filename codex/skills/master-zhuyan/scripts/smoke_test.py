@@ -4,18 +4,16 @@
 from __future__ import annotations
 
 import importlib.util
+import contextlib
+import io
 import json
-import re
 import sys
 import tempfile
 from pathlib import Path
-from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parent.parent
-LEARNING_PATH = ROOT / "scripts" / "learning_artifacts.py"
-TOPIC_PATH = ROOT / "scripts" / "topic_research.py"
 PREP_PATH = ROOT / "scripts" / "prep_template.py"
-JSON_BLOCK_RE = re.compile(r"```json\s*\n(.*?)\n```", re.DOTALL)
+VALIDATOR_PATH = ROOT / "scripts" / "validate_deep_research_artifacts.py"
 
 
 def load_module(name: str, path: Path):
@@ -28,130 +26,13 @@ def load_module(name: str, path: Path):
     return module
 
 
-LEARNING = load_module("mz_learning_artifacts", LEARNING_PATH)
-TOPIC = load_module("mz_topic_research", TOPIC_PATH)
 PREP = load_module("mz_prep_template", PREP_PATH)
+VALIDATOR = load_module("mz_validate_deep_research_artifacts", VALIDATOR_PATH)
 
 
-def read_contract(path: Path) -> tuple[dict, str]:
-    text = path.read_text(encoding="utf-8")
-    match = JSON_BLOCK_RE.search(text)
-    if not match:
-        raise AssertionError(f"missing json block in {path}")
-    return json.loads(match.group(1)), text[match.end():].lstrip("\n")
-
-
-def write_contract(path: Path, payload: dict, body: str = "# Draft\n") -> None:
-    path.write_text(
-        "```json\n" + json.dumps(payload, indent=2, ensure_ascii=False) + "\n```\n\n" + body,
-        encoding="utf-8",
-    )
-
-
-def exercise_learning_artifacts(tmpdir: Path) -> None:
-    LEARNING.command_init_card(SimpleNamespace(topic="osmosis", out=str(tmpdir)))
-    card = tmpdir / "knowledge_card.md"
-    payload, body = read_contract(card)
-    payload.update(
-        {
-            "learner_goal": "explain osmosis as a transferable model.",
-            "core_model": "water moves across a semipermeable membrane toward the side with higher effective solute pressure.",
-            "anchor_example": "a raisin swells in water because water enters through semipermeable membranes.",
-            "key_boundaries": ["requires a semipermeable barrier"],
-            "misconceptions": ["water always moves toward the side with more water"],
-            "retrieval_hooks": ["what barrier and gradient make osmosis happen?"],
-            "expansion_links": ["tonicity"],
-            "provenance": {"source_facts": [], "teacher_framing": ["raisin anchor"]},
-            "status": "draft",
-        }
-    )
-    write_contract(card, payload, body)
-    LEARNING.command_validate_card(SimpleNamespace(path=str(card)))
-    rendered = LEARNING.render_card(payload)
-    if "# osmosis" not in rendered.lower() or "retrieval hooks" not in rendered.lower():
-        raise AssertionError("render-card smoke output missing expected sections")
-
-    LEARNING.command_init_report(
-        SimpleNamespace(topic="hyponatremia", out=str(tmpdir), kernel="medicine", explanatory_type="mechanism")
-    )
-    report = tmpdir / "study_report.md"
-    payload, body = read_contract(report)
-    payload.update(
-        {
-            "learner_goal": "reason through a dense medical concept without losing branches.",
-            "core_model": "a report links the defining disturbance to signs, tests, treatment logic, and avoidable errors.",
-            "reasoning_chain": [
-                {"step": "start from the defining disturbance", "observable_consequence": "branches become predictable"}
-            ],
-            "load_bearing_branches": [
-                {
-                    "kernel_item": item,
-                    "title": item,
-                    "explanation": f"explanation for {item}.",
-                    "boundary_or_failure_mode": f"boundary for {item}.",
-                }
-                for item in payload["coverage_kernel"]
-            ],
-            "key_boundaries": [],
-            "misconceptions": [],
-            "retrieval_hooks": ["can the core model reconstruct every branch?"],
-            "source_notes": [],
-            "status": "draft",
-        }
-    )
-    write_contract(report, payload, body)
-    LEARNING.command_validate_report(SimpleNamespace(path=str(report)))
-
-    cjk_dir = tmpdir / "cjk-learning"
-    LEARNING.command_init_report(SimpleNamespace(topic="高钙血症", out=str(cjk_dir), kernel="generic", explanatory_type="mixed"))
-    cjk_payload, _ = read_contract(cjk_dir / "study_report.md")
-    if cjk_payload["slug"] != "高钙血症":
-        raise AssertionError("learning_artifacts slugify should preserve CJK topic text")
-
-
-def exercise_topic_research(tmpdir: Path) -> None:
-    run_dir = tmpdir / "deep"
-    TOPIC.command_init_tree(SimpleNamespace(topic="sample topic", out=str(run_dir)))
-
-    brief = run_dir / "framing_brief.md"
-    brief_payload, brief_body = read_contract(brief)
-    brief_payload.update(
-        {
-            "expert_identity": "conceptual teacher",
-            "learner_goal": "reason about the sample topic",
-            "primary_confusion": "what core model organizes the topic",
-            "entry_point": "start from the named concept",
-            "research_plan": "check the core model, one example, and one boundary",
-            "source_strategy": "stable conceptual sources are enough for this smoke test",
-            "success_criteria": "the learner can explain one example and one boundary",
-        }
-    )
-    write_contract(brief, brief_payload, brief_body)
-
-    tree = run_dir / "tree.md"
-    payload, body = read_contract(tree)
-    payload["nodes"] = [
-        {
-            "node_id": "root",
-            "title": "root",
-            "question": "what is the core model?",
-            "source_tier": "stable",
-            "priority": "load-bearing",
-            "stop_condition": "covered when the core model has one example and one boundary.",
-            "prerequisites": [],
-            "status": "pending",
-            "owner": "",
-            "skip_reason": "",
-        }
-    ]
-    write_contract(tree, payload, body)
-    TOPIC.command_validate_tree(SimpleNamespace(tree=str(tree)))
-
-    cjk_run = tmpdir / "deep-cjk"
-    TOPIC.command_init_tree(SimpleNamespace(topic="高钙血症", out=str(cjk_run)))
-    cjk_tree, _ = read_contract(cjk_run / "tree.md")
-    if cjk_tree["slug"] != "高钙血症":
-        raise AssertionError("topic_research slugify should preserve CJK topic text")
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text.rstrip() + "\n", encoding="utf-8")
 
 
 def exercise_prep_templates(tmpdir: Path) -> None:
@@ -171,12 +52,193 @@ def exercise_prep_templates(tmpdir: Path) -> None:
         raise AssertionError("arbitrary template names should be matchable through explicit activation phrases")
 
 
+def build_deep_research_sample(root: Path) -> None:
+    write_text(
+        root / "manifest.yaml",
+        "title: DeepResearch smoke sample\n"
+        "chapter_emphasis: understanding\n"
+        "status: smoke\n"
+        "chapters:\n"
+        "  - id: 01_overview\n"
+        "    title: Workbench overview\n"
+        "    file: chapters/01_overview.md\n"
+        "    status: planned\n",
+    )
+    write_text(
+        root / "index.md",
+        "# DeepResearch Smoke Sample\n\n"
+        "## 阅读顺序\n\n"
+        "- [Workbench overview](chapters/01_overview.md)\n\n"
+        "### Research Workbench\n\n"
+        "- [Process Trace](notes/process_trace.md)\n"
+        "- [Research Tree](notes/research_tree.md)\n"
+        "- [Citation Audit](notes/citation_audit.md)\n"
+        "- [Continuation Map](notes/continuation_map.md)\n",
+    )
+    write_text(
+        root / "chapters" / "01_overview.md",
+        "# Overview\n\n"
+        "This compact chapter teaches that semantic workbench validation needs evidence integration.\n",
+    )
+    write_text(
+        root / "final" / "final_merged.md",
+        "# DeepResearch Smoke Sample\n\n"
+        "The merged output preserves that semantic workbench validation needs evidence integration.\n",
+    )
+    write_text(root / "notes" / "process_trace.md", "# Process Trace\n\nroute: deep-research\nphase: smoke\nagent: source_scout_smoke")
+    write_text(
+        root / "notes" / "research_brief.md",
+        "# Research Brief\n\n"
+        "learner_goal: validate workbench\n"
+        "primary_confusion: how a compact workbench proves semantic integration\n"
+        "success_criteria: chapter, final, and citation audit preserve EL-smoke\n",
+    )
+    write_text(
+        root / "notes" / "research_tree.md",
+        "# Research Tree\n\n"
+        "node_id: smoke-root\n"
+        "question: can the workbench validate semantic integration?\n"
+        "status: evidence_ready\n"
+        "next_action: promote evidence into model and citation audit\n"
+        "stop_condition: EL-smoke supports the model and final merge\n",
+    )
+    write_text(
+        root / "notes" / "source_map.md",
+        "# Source Map\n\n"
+        "source_id: supplied\n"
+        "title: Supplied smoke source\n"
+        "source_type: markdown\n"
+        "locator: smoke source map\n"
+        "access_method: local read\n"
+        "read_state: full\n"
+        "supports_questions: smoke-root\n"
+        "failure_label: none\n",
+    )
+    write_text(
+        root / "notes" / "evidence_ledger.md",
+        "# Evidence Ledger\n\n"
+        "claim_id: EL-smoke\n"
+        "claim: semantic workbench validation needs evidence integration\n"
+        "source_ref: supplied\n"
+        "locator: smoke source map\n"
+        "evidence_type: mechanism\n"
+        "confidence: high\n"
+        "status: accepted\n"
+        "teaching_use: quality_check\n",
+    )
+    write_text(
+        root / "notes" / "knowledge_model.md",
+        "# Knowledge Model\n\nlocked: true\ncore_model: workbench completeness\nevidence_ids: EL-smoke\n",
+    )
+    write_text(
+        root / "notes" / "chapter_plan.md",
+        "# Chapter Plan\n\n"
+        "learner_bottleneck: unclear artifact spine\n"
+        "selected_spine: definition -> evidence -> model -> validation\n"
+        "precision_anchors: EL-smoke\n\n"
+        "chapter_id: 01_overview\n"
+        "title: Workbench overview\n"
+        "purpose: show how the DeepResearch sample proves semantic integration\n"
+        "input_refs: notes/knowledge_model.md, notes/evidence_ledger.md\n"
+        "required_anchors: EL-smoke, locked knowledge model, citation audit support state\n"
+        "output_path: chapters/01_overview.md\n"
+        "completion_criteria: chapter references evidence, model, and citation audit\n",
+    )
+    write_text(
+        root / "notes" / "integrator_decisions.md",
+        "# Integrator Decisions\n\n"
+        "promotion_id: smoke\n"
+        "source_artifact: notes/agent_outputs/source_scout/sample.md\n"
+        "promoted_to: notes/source_map.md\n"
+        "result: accepted\n\n"
+        "promotion_id: smoke-chapter\n"
+        "source_artifact: notes/agent_outputs/teaching_composer/01_overview/sample.md\n"
+        "promoted_to: chapters/01_overview.md\n"
+        "source_section_id: 01_overview\n"
+        "result: accepted\n",
+    )
+    write_text(
+        root / "notes" / "citation_audit.md",
+        "# Citation Audit\n\n"
+        "claim_or_section: chapters/01_overview.md\n"
+        "evidence_ids: EL-smoke\n"
+        "source_ids: supplied\n"
+        "locator_check: source_map has supplied source\n"
+        "support_state: supported\n"
+        "integrator_action: accept\n",
+    )
+    write_text(root / "notes" / "continuation_map.md", "# Continuation Map\n\nbranch_id: next")
+    write_text(
+        root / "notes" / "agent_outputs" / "source_scout" / "sample.md",
+        "## Agent Output: source_scout_smoke\n\n"
+        "agent_id: source_scout_smoke\n"
+        "agent_type: source_scout\n"
+        "mission: validate sample\n\n"
+        "### Trace Update\n\n"
+        "agent_id: source_scout_smoke\n"
+        "artifacts_read: notes/research_brief.md\n"
+        "artifacts_written: notes/agent_outputs/source_scout/sample.md\n"
+        "canonical_targets: notes/source_map.md\n"
+        "strong_findings: EL-smoke\n"
+        "open_branches: none\n"
+        "handoff_suggestion: integrator\n",
+    )
+    write_text(
+        root / "notes" / "agent_outputs" / "teaching_composer" / "01_overview" / "sample.md",
+        "agent_id: teaching_composer_01_overview\n"
+        "agent_type: teaching_composer\n"
+        "mission: draft the assigned smoke chapter\n"
+        "input_artifacts: notes/knowledge_model.md, notes/chapter_plan.md, notes/evidence_ledger.md\n"
+        "output_targets: chapters/01_overview.md\n\n"
+        "evidence_ids_used: EL-smoke\n"
+        "required_anchors_covered: EL-smoke, locked knowledge model, citation audit support state\n"
+        "required_anchors_omitted: none\n"
+        "integrator_action: accept\n\n"
+        "canonical_promotion_hints:\n"
+        "  promote_to: chapters/01_overview.md\n"
+        "  sections_or_entries: 01_overview\n"
+        "  edits_needed: integrator review\n"
+        "trace_update:\n"
+        "  artifacts_read: notes/knowledge_model.md, notes/chapter_plan.md, notes/evidence_ledger.md\n"
+        "  artifacts_written: notes/agent_outputs/teaching_composer/01_overview/sample.md\n"
+        "  canonical_targets: chapters/01_overview.md\n"
+        "  strong_findings: EL-smoke\n"
+        "  open_branches: none\n"
+        "  handoff_suggestion: integrator\n",
+    )
+
+
+def exercise_deep_research_validator(tmpdir: Path) -> None:
+    help_stdout = io.StringIO()
+    with contextlib.redirect_stdout(help_stdout):
+        try:
+            VALIDATOR.main(["--help"])
+        except SystemExit as exc:
+            if exc.code not in (0, None):
+                raise AssertionError("validator --help should exit cleanly") from exc
+    help_text = help_stdout.getvalue()
+    if "--root" not in help_text or "--json" not in help_text:
+        raise AssertionError("validator help should mention --root and --json")
+
+    sample = tmpdir / "deep-research-smoke"
+    build_deep_research_sample(sample)
+    json_stdout = io.StringIO()
+    with contextlib.redirect_stdout(json_stdout):
+        code = VALIDATOR.main(["--root", str(sample), "--json"])
+    payload = json.loads(json_stdout.getvalue())
+    if code != 0 or not payload["ok"]:
+        raise AssertionError("deep-research validator should accept the smoke sample")
+    if not {"notes/research_tree.md", "notes/citation_audit.md"}.issubset(set(payload["present"])):
+        raise AssertionError("deep-research validator should require research tree and citation audit")
+    if payload["evidence_ids"] != ["EL-smoke"]:
+        raise AssertionError("deep-research validator should report evidence semantics")
+
+
 def main() -> int:
     with tempfile.TemporaryDirectory() as tmp:
         tmpdir = Path(tmp)
-        exercise_learning_artifacts(tmpdir)
-        exercise_topic_research(tmpdir)
         exercise_prep_templates(tmpdir)
+        exercise_deep_research_validator(tmpdir)
     print("SMOKE_TEST ok")
     return 0
 
