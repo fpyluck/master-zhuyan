@@ -5,7 +5,7 @@
 <img src="https://img.shields.io/badge/Codex-Compatible-412991?style=for-the-badge&logo=openai&logoColor=white" alt="codex"/>
 <img src="https://img.shields.io/badge/Domains-All-0ea5e9?style=for-the-badge" alt="domains"/>
 
-# MasterZhuyan · 朱言先生
+# MasterZhuyan · Zhuyan大师-为了一位挑剔的同事
 
 **全领域 AI 学习技能 · All-Domain AI Learning Skill**
 
