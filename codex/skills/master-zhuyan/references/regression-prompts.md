@@ -1,13 +1,13 @@
 # MasterZhuyan 回归测试提示
 
-本文件用于编辑 MasterZhuyan 技能后做行为回归。它保留原有用途：测试 deep-research + longform 单一路由、聊天交付/限制说明、来源边界、命名模板和当前信息处理；同时新增深度研究式学习质量门测试。
+本文件用于编辑 MasterZhuyan 技能后做行为回归。它测试 deep-research + longform 单一路由、文件受阻时的限制说明、来源边界、命名模板和当前信息处理；同时覆盖深度研究式学习质量追踪与增强测试。
 
 执行建议：
 
 1. 每次改动后至少跑“核心回归组”。
 2. 涉及来源、检索、图片、高风险或模板逻辑时，加跑对应专项组。
 3. 期望结果不要求逐字一致，但必须满足行为约束。
-4. 学习请求默认应走 deep-research + 文件化长文交付。简单稳定概念可以静默运行研究/建模层，但不能把聊天回答当默认教学路线。用户明确要求 brief、no files、停止生成文件，或文件不可用时，只给交付限制说明或接续建议。
+4. 学习请求默认应走 deep-research + 文件化长文交付。稳定概念也保持紧凑研究/建模记录，不能把即时正文当默认教学路线。用户明确要求不生成文件或文件不可用时，给限制说明：intended file-backed route、当前进度、缺失能力、最小下一步；不要把即时讲解当替代交付。
 
 ## 核心回归组
 
@@ -59,29 +59,29 @@ Expected:
 
 创建 longform 文件。强化比较章节，包含一句话区分、决定性标准、机制差异、适用场景、误用后果和易混陷阱。
 
-### Test 5: 显式停止文件化输出
+### Test 5: 显式不生成文件
 
 Input:
 
 ```text
-只在聊天里简短回答：AUC 和 accuracy 有什么区别？
+不要生成文件：AUC 和 accuracy 有什么区别？
 ```
 
 Expected:
 
-不要创建完整聊天讲解。简要说明 MasterZhuyan 的学习路线是文件化长文，本请求停止正常交付；给出可恢复文件化输出的接续建议或极短限制说明。
+不创建 answer-only teaching substitute。输出限制说明：原本应生成的 DeepResearch 文件化路线、当前可确认的范围、无法完成文件化交付的原因、恢复文件化输出的最小下一步。
 
 ### Test 6: 停止文件输出例外
 
 Input:
 
 ```text
-停止生成文件，只在聊天里继续讲 Transformer。
+停止生成文件，继续处理 Transformer 学习材料。
 ```
 
 Expected:
 
-不要用聊天替代完整学习材料。说明跳过文件化长文是因为用户要求停止文件输出，并给出接续建议。
+停止继续写文件；只报告当前文件化 DeepResearch 进度、未完成的 canonical artifacts、已知限制和下一步恢复点，不用即时讲解替代未完成章节。
 
 ## 深度研究式学习专项组
 
@@ -96,7 +96,7 @@ Input:
 Expected:
 
 使用 longform-composer；不可用时使用 MasterZhuyan longform bridge。创建 manifest、index 或阅读顺序、章节、validation、final/final_merged.md。聊天回复给路径、阅读顺序、验证状态和已知限制，不粘贴全文。
-研究/建模层和长文层必须衔接：先有足够的 source map、research brief、evidence ledger、knowledge model 或等价心智锁定，再进入章节计划和写作。
+研究/建模层和长文层必须衔接：先有足够且已落盘的 source map、research brief、evidence ledger、knowledge model，再进入 canonical 章节计划和最终写作。
 
 ### Test 7A: 研究节点数量由模型推断
 
@@ -108,7 +108,7 @@ Input:
 
 Expected:
 
-不要机械固定 3、5 或 7 个研究节点，也不要按固定 chunk 切材料。根据知识问题、来源结构、依赖顺序和教学价值推断节点；候选评分只在澄清范围时可选，不能成为扩展限制。每个节点要有停止条件，不得写“全面研究”这类空节点。
+研究节点数量由知识问题、来源结构、依赖顺序与教学价值推断得出。候选评分（如出现）只回流到澄清研究边界，不进入节点数量或扩展规模的决策。每个节点声明一条可由具体证据或产物判定完成的停止条件；缺乏可判定停止条件的节点需要拆细或合并。
 
 ### Test 8: 无来源时不能伪造细节
 
@@ -158,7 +158,7 @@ Input:
 
 Expected:
 
-使用当前检索或明确说明需要当前指南来源。不得编造指南年份、推荐等级、剂量或诊疗路径。仍默认文件化长文；如果用户停止文件输出，只给限制说明或接续建议。
+使用当前检索或明确说明需要当前指南来源。不得编造指南年份、推荐等级、剂量或诊疗路径。仍默认文件化长文；如果用户停止文件输出，只给限制说明、当前来源状态、医学学习边界和恢复文件化交付的最小下一步。
 
 ### Test 12: 高风险领域边界
 
@@ -184,7 +184,7 @@ Expected:
 
 区分材料事实、可能推断和不能下的因果结论。说明相关不等于因果，列出需要的额外证据或研究设计。不要把“同时上升”写成确定因果。
 
-### Test 13A: 多 agent 是普通能力但必须有边界
+### Test 13A: AgenticResearch 默认执行
 
 Input:
 
@@ -194,7 +194,19 @@ Input:
 
 Expected:
 
-多 agent/多 pass 可用于提升证据覆盖、规划、例子、检查或速度，不应被写成例外模式或高门槛触发。每个 worker 只能产出有 `section_id`、`source_id`、`lens_id`、`check_id`、`node_id`、规划 sidecar 或明确路径的 bounded artifact。一个 integrator 负责矛盾、证据合并、章节范围和最终质量判断。不得设置无产物的“品味审查员”必选节点。
+AgenticResearch 是默认执行织物，承担常规研究/建模工作流。每个 worker 输出落到一个 bounded artifact 槽位：`section_id`、`source_id`、`node_id`、规划 sidecar 或显式文件路径之一；`lens_id`、`check_id` 等可选 ID 只作为 worker boundary 的追踪标签，不替代产物落点。一个 integrator 负责矛盾收敛、证据合并、章节范围裁定与最终质量判断；其他评审角色进入流程时也要产出 bounded artifact。当 native sub-agent 不可用时，降级理由指向具体 runtime/tool/worker 失败，并切换到 5.26 式顺序研究/建模链路继续推进。
+
+### Test 13C: 元信息不占知识章节槽位
+
+Input:
+
+```text
+系统整理高钾血症，做成完整学习材料。
+```
+
+Expected:
+
+`notes/chapter_plan.md` 由 locked Knowledge Model 生成，携带 learner_bottleneck、selected_spine、reference_frame、precision_anchors；每个 chapter 节点包含 `purpose`、`required_anchors`、`completion_criteria`，与现行 chapter 字段契约保持一致。知识章节槽位只承载 Knowledge Model 锚点：定义、判断主线、机制、分类与病因等承重路径，以及与主题相关的 reference frame 证据（正常范围、异常阈值、单位/量纲、基线对照等通用形式）。学习元信息（阅读地图、证据地图、安全边界、来源说明、如何使用本材料）流向 `index.md`、`notes/*`、delivery note 或限制说明；高风险学习边界在知识章节中最多保留一句元提示，除非用户明确要求把学习安全流程本身作为主题。本例中的高钾血症仅作为 Input 触发，具体疾病章节布局不构成对其他主题的格式约束。
 
 ### Test 13B: 后续知识拓展是尾章
 
@@ -206,7 +218,7 @@ Input:
 
 Expected:
 
-在整体 lesson plan 中提前考虑“后续知识拓展”，但最终应从 merged synthesis 生成尾章或最终小节。不得在每章末尾机械添加“下一章怎么接”。拓展项要连接本主题的机制、边界、易错点或迁移路径，而不是泛泛列书单。
+lesson plan 阶段预留“后续知识拓展”占位；最终内容由 merged synthesis 汇出，落到尾章或最终小节。拓展项挂回本主题的承重面：机制延伸、边界条件、易错点修复或跨主题迁移路径，并以具体节点、锚点或来源指向作为完成判据。
 
 ## 命名模板专项组
 
@@ -246,7 +258,7 @@ Expected:
 
 除非用户说“猫式讲解、用猫风格、猫模板”等激活短语，否则使用默认 MasterZhuyan 风格。不要仅因主题含有“猫”就扫描或应用猫模板。
 
-## 输出质量门专项组
+## 输出质量追踪专项组
 
 ### Test 17: 知识模型不能只堆列表
 
