@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex.local/master-zhuyan/research_tree.schema.json",
+  "title": "MasterZhuyan Research Tree",
+  "description": "Dynamic DeepResearch question tree used to track source needs, evidence state, next action, and stop conditions.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "tree_id": {
+      "type": "string"
+    },
+    "topic_title": {
+      "type": "string"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/node"
+      },
+      "default": []
+    }
+  },
+  "required": ["tree_id", "topic_title", "nodes"],
+  "$defs": {
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "type": "string"
+        },
+        "question": {
+          "type": "string"
+        },
+        "why_it_matters": {
+          "type": "string"
+        },
+        "source_need": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["open", "searching", "reading", "evidence_ready", "modeled", "retired", "blocked"]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "next_action": {
+          "type": "string"
+        },
+        "stop_condition": {
+          "type": "string"
+        }
+      },
+      "required": ["node_id", "question", "status", "next_action", "stop_condition"]
+    }
+  }
+}
