@@ -1,30 +1,27 @@
 # MasterZhuyan adaptive router
 
-Use this file only after `SKILL.md` has selected the merged deep-research plus longform route, or a delivery/limitation note because file-backed output is blocked or intentionally stopped. `SKILL.md` `Output policy` remains authoritative.
+Use this file only after `SKILL.md` has selected the merged deep-research plus longform route, or a delivery/limitation note because file-backed output is unavailable or intentionally stopped. `SKILL.md` `Output policy` remains authoritative.
 
 ## 1. Named prep-template overlay
 
-Before chapter planning, check whether the user explicitly named a saved prep template such as `X式讲解`, `X式输出`, `X教案`, `X模板`, `用X风格`, or `按X教案`. If so, load the matching local template from `.masterzhuyan/prep_templates/`. If no style is explicitly named, do not scan or apply templates.
+Template lookup is an explicit-style signal, not topic matching. Load `.masterzhuyan/prep_templates/<name>.md` when the request names a saved style through patterns such as `X式讲解`, `X式输出`, `X教案`, `X模板`, `用X风格`, or `按X教案`.
 
-Do not activate a template from a bare ordinary word alone. A template named `猫` should activate for `猫式讲解` or `用猫风格`, but not for an unrelated topic such as `猫抓病`.
+Activation requires one of the saved template's explicit style aliases in the current request. Ordinary topic words stay source/topic intent.
 
-Apply the template as a soft overlay on source priority, learner assumptions, style, safety posture, and chapter emphasis. Do not use it to create a competing output route or bypass the research/modeling layer.
+The loaded template flows into the planning layer as a soft overlay: source priority, learner assumptions, explanation taste, safety posture, chapter emphasis, and anti-overconstraint notes. Research, evidence, Knowledge Model locking, and chapter planning remain the single route.
 
 ## 2. Chapter emphasis
 
-Memory emphasis:
-Use when the user asks to remember, review, extract exam points, create mnemonics, or "帮我记". Strengthen the memory chapter with core anchors, retrieval hooks, mnemonics or logic lines, high-frequency points, and 30-second recap.
+User wording flows into chapter `purpose`, `required_anchors`, examples, and ordering inside the single route.
 
-Understanding emphasis:
-Use when the user asks why, how, mechanism, principle, derivation, judgment logic, or "讲懂". Strengthen the understanding chapter with baseline, disturbance, mechanism, consequence, recognition, handling, and boundary.
+| Intent signal | Information flows to |
+| --- | --- |
+| remember, review, exam points, mnemonics, `帮我记` | memory purpose: core anchors, retrieval hooks, mnemonic or logic line, high-frequency points, 30-second recap |
+| why, how, mechanism, principle, derivation, judgment logic, `讲懂` | understanding purpose: reference frame, disturbance, mechanism, consequence, recognition, handling, boundary |
+| compare, distinguish, identify, `怎么区分`, A 与 B | comparison purpose: decisive criteria, mechanism differences, use cases, traps, one-sentence distinctions |
+| traps, mistakes, confusing points, wrong-question review, risk boundaries | error-repair purpose: wrong pattern, correct understanding, trigger clue, repair method |
 
-Comparison emphasis:
-Use when the user asks to compare, distinguish, identify, or "怎么区分". Strengthen the comparison chapter with decisive criteria, mechanism differences, use cases, traps, and one-sentence distinctions.
-
-Easy-error emphasis:
-Use when the user asks for traps, mistakes, confusing points, wrong-question review, or risk boundaries. Strengthen the easy-error chapter with wrong pattern, correct understanding, trigger clue, and repair method.
-
-When multiple emphases apply, include all relevant chapter modules and order them by the user's wording or learning flow.
+When several signals apply, `chapter_plan` includes the relevant purposes and orders them by the user's wording or by the learning flow.
 
 ## 3. Source intake
 
@@ -35,7 +32,7 @@ Image/screenshot:
 Use only visible information. If a label or number is unclear, mark it rather than guessing.
 
 Uploaded/repository files:
-Inspect actual files. For multiple files, build a source map internally:
+Inspect actual files. For multiple files, write `notes/source_map.md`:
 file -> main topic -> trustworthy facts -> gaps -> output chapter.
 
 Current/source-sensitive topics:
@@ -71,4 +68,4 @@ background -> actors/ideas -> causes -> process -> consequences -> interpretatio
 
 ## 5. Depth control
 
-Longform does not mean padding. Add depth when it protects a mechanism, branch criterion, threshold, exception, misconception, or transfer boundary. Cut chapters or sections that do not improve understanding, memory, judgment, or reuse.
+Add depth when it protects a mechanism, branch criterion, threshold, exception, misconception, or transfer boundary. Keep only chapters or sections that improve understanding, memory, judgment, or reuse.
