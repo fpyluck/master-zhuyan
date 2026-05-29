@@ -17,7 +17,7 @@
     "topic_title": {
       "type": "string"
     },
-    "source_intake_mode": {
+    "source_intake_state": {
       "type": "string",
       "enum": ["pasted_text", "image", "file", "repository", "retrieval", "mixed", "none"]
     },
@@ -71,6 +71,30 @@
           "type": "string",
           "description": "Path, URL, page range, screenshot label, or other retraceable location."
         },
+        "access_method": {
+          "type": "string",
+          "description": "How this source was obtained or attempted: user file, local read, web search, fetch, browser, OCR, MCP, or other."
+        },
+        "retrieved_at": {
+          "type": "string"
+        },
+        "read_state": {
+          "type": "string",
+          "enum": ["full", "partial", "snippet_only", "unavailable"]
+        },
+        "supports_questions": {
+          "type": "array",
+          "description": "Research question ids or short question labels this source can support.",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "failure_label": {
+          "type": "string",
+          "enum": ["none", "not_found", "access_blocked", "tool_failed", "source_partial", "snippet_only", "out_of_scope", "unknown"],
+          "default": "none"
+        },
         "title": {
           "type": "string"
         },
@@ -111,7 +135,7 @@
           "default": []
         }
       },
-      "required": ["source_id", "source_type", "locator"]
+      "required": ["source_id", "source_type", "locator", "access_method", "read_state", "supports_questions"]
     },
     "coverage_item": {
       "type": "object",
