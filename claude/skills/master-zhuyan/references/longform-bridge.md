@@ -1,21 +1,25 @@
 # MasterZhuyan longform bridge
 
-Use this only after `SKILL.md` `Output policy` has selected file-backed longform and `$longform-composer` is unavailable. This bridge defines the fallback file protocol.
+Use this only after `SKILL.md` `Output policy` has selected file-backed longform and `$longform-composer` is unavailable. This bridge defines the fallback file protocol; `notes/chapter_plan.md` remains the source of chapter intent.
 
 ## 1. Handoff to longform-composer
 
-When $longform-composer is available, pass this payload conceptually:
+When $longform-composer is available, pass this compact contract:
 
 topic:
 audience:
 depth:
 chapter emphasis: memory, understanding, comparison, easy-error, or mixed
-active prep template: none, or template name plus the 3-6 useful biases it contributes
+active prep template: none, or template name plus the useful biases it contributes
 language: chinese unless otherwise requested
-chapter plan:
-tail section: 后续知识拓展, if the lesson plan needs one
 source map:
-required MasterZhuyan sections:
+knowledge model:
+chapter plan:
+  learner bottleneck:
+  selected spine:
+  precision anchors:
+  per chapter: purpose, required_anchors, completion_criteria
+tail section: 后续知识拓展, if the lesson plan needs one
 delivery or limitation note, if any:
 final requirement: create manifest, index, chapters, validate, and final/final_merged.md
 
@@ -32,30 +36,40 @@ long_output/<project-slug>/
   final/
   notes/
 
-Required files:
+File roles:
 
 manifest.yaml:
-Authoritative chapter order, active prep template if any, chapter emphasis or mode, audience, depth, source notes, and status.
+Delivery projection of current `notes/chapter_plan.md` rows, active prep template if any, chapter emphasis, audience, depth, source notes, and status.
 
 index.md:
-Reading guide and chapter list.
+Reading guide, chapter list, source/validation pointers, and one-sentence boundary note when needed.
 
 chapters/*.md:
-One coherent chapter per file. Each chapter must be independently useful and should include objective, core content, examples or applications, easy errors, and chapter summary when appropriate.
+Canonical teaching chapters. Each chapter satisfies its row-level `purpose`, `required_anchors`, and `completion_criteria`.
 
 final/final_merged.md:
 Merged deliverable in manifest order.
 
 notes/:
-Optional planning, source, worker-draft, review, validation, and limitation sidecars. These files are never canonical merge input unless their content is promoted into manifest-listed `chapters/*.md`.
+Non-canonical planning, source, agent output, integrator decision, process trace, continuation, validation, and limitation sidecars. These files are never canonical merge input unless their content is promoted into canonical `chapters/*.md`.
 
-For multi-agent runs, use `notes/worker-drafts/<section_id>/<agent>_draft.md`, `notes/source-drafts/<source_id>/<agent>_coverage.md`, `notes/lens-drafts/<lens_id>/<agent>_draft.md`, or `notes/checks/<check_id>/<agent>_findings.md` for sidecar artifacts, and `notes/review.md` for conflicts, missing artifacts, fallbacks, and post-merge review. Do not add new manifest status values or register sidecar artifacts as chapters. If longform-composer accepts extra manifest keys, coordination metadata may be recorded as shallow optional scalars such as `coordination_mode: sidecar-artifacts` and `sidecar_artifacts_root: notes`; omit these fields when the manifest schema is strict.
+State flow:
+
+1. `notes/chapter_plan.md` stable -> `materialize-chapter-agents` -> `notes/agent_outputs/teaching_composer/<section_id>/<agent_id>.md` -> integrator promotion -> canonical `chapters/*.md`.
+2. Other delegated or multi-agent work -> `notes/agent_outputs/<agent_type>/<agent_id>.md` or explicit Agent Fabric path -> `notes/integrator_decisions.md`, `notes/continuation_map.md`, or `notes/process_trace.md`.
+3. `materialize-chapter-agents` projects current chapter-plan rows into `manifest.yaml` and `index.md`; `merge_project` reads `manifest["chapters"]` as the delivery order and refuses manifest/chapter-plan drift.
+
+Coordination metadata stays in notes unless the manifest field is already defined for this bridge.
 
 ## 3. Recommended fallback commands
 
-When this skill's script is available, use:
+When this skill's script is available, initialize the container:
 
-python scripts/mz_longform.py init --root long_output/<project-slug> --title "<title>" --mode "<mode>" --chapters "<chapter 1>|<chapter 2>|<后续知识拓展 if useful>"
+python scripts/mz_longform.py init --root long_output/<project-slug> --title "<title>" --chapter-emphasis "<memory|understanding|comparison|easy-error|mixed>" --chapters "<Knowledge-Model-derived chapter titles>"
+
+After `notes/chapter_plan.md` is stable, materialize the per-chapter Teaching Composer work packages:
+
+python scripts/mz_longform.py materialize-chapter-agents --root long_output/<project-slug>
 
 After writing chapters:
 
@@ -64,19 +78,11 @@ python scripts/mz_longform.py merge --root long_output/<project-slug>
 
 ## 4. Chapter writing standard
 
-Each chapter should answer the learning questions that its `chapter_plan` assigns. These are optional ingredients, not required headings:
+Each Teaching Composer sidecar answers the row contract assigned by `chapter_plan`: `purpose`, `required_anchors`, `completion_criteria`, and `output_path`. Headings are local choices; cover concepts, logic chain, memory, confusion repair, application, and boundaries only when they serve that row.
 
-1. What is this chapter for?
-2. What are the core concepts?
-3. What is the logic chain?
-4. What must be remembered?
-5. What is easily confused?
-6. How is it applied?
-7. What is the boundary or limitation?
+Reading maps, source/evidence maps, safety boundaries, artifact inventories, and process explanations belong in `index.md`, `notes/*`, or the final delivery note. A chapter file is the right place only when the content teaches a substantive reference frame or knowledge overview.
 
-For learning chapters, keep the MasterZhuyan logic and use markdown headings.
-
-Use `后续知识拓展` only as a final chapter or tail section when it adds transfer, adjacent concepts, open questions, or next-study value. Do not add decorative chapter endings such as “下一章怎么接” unless they carry real teaching content.
+Place `后续知识拓展` at one final location: a final chapter or final section when it adds transfer, adjacent concepts, open questions, or next-study value. Chapter-local bridges stay inside a chapter only when they complete that chapter's purpose through prerequisite handoff, contrast, transfer, or next-study reason.
 
 ## 5. Chat delivery after longform
 
