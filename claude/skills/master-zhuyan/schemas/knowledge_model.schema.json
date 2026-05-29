@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://claude.local/master-zhuyan/knowledge_model.schema.json",
+  "$id": "https://codex.local/master-zhuyan/knowledge_model.schema.json",
   "title": "MasterZhuyan Knowledge Model",
   "description": "Expert-teacher model of the topic: concepts, relations, mechanisms, contrasts, memory anchors, and transfer boundaries.",
   "type": "object",
@@ -25,6 +25,17 @@
     "core_spine": {
       "type": "string",
       "description": "The smallest backbone that makes the topic make sense."
+    },
+    "core_spine_evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "core_spine_support_state": {
+      "type": "string",
+      "enum": ["supported", "partial", "inferred", "missing"]
     },
     "concepts": {
       "type": "array",
@@ -90,7 +101,7 @@
       "default": []
     }
   },
-  "required": ["model_id", "topic_title", "core_spine"],
+  "required": ["model_id", "topic_title", "research_brief_ref", "source_map_ref", "core_spine", "core_spine_evidence_ids", "core_spine_support_state"],
   "$defs": {
     "concept": {
       "type": "object",
@@ -108,7 +119,7 @@
         "role": {
           "type": "string"
         },
-        "evidence_card_ids": {
+        "evidence_ids": {
           "type": "array",
           "items": {
             "type": "string"
@@ -135,7 +146,7 @@
         "explanation": {
           "type": "string"
         },
-        "evidence_card_ids": {
+        "evidence_ids": {
           "type": "array",
           "items": {
             "type": "string"
@@ -167,7 +178,7 @@
         "boundary": {
           "type": "string"
         },
-        "evidence_card_ids": {
+        "evidence_ids": {
           "type": "array",
           "items": {
             "type": "string"
@@ -194,7 +205,7 @@
         "common_confusion": {
           "type": "string"
         },
-        "evidence_card_ids": {
+        "evidence_ids": {
           "type": "array",
           "items": {
             "type": "string"
@@ -217,7 +228,7 @@
         "why_it_matters": {
           "type": "string"
         },
-        "evidence_card_ids": {
+        "evidence_ids": {
           "type": "array",
           "items": {
             "type": "string"
@@ -243,7 +254,7 @@
         "trigger_clue": {
           "type": "string"
         },
-        "evidence_card_ids": {
+        "evidence_ids": {
           "type": "array",
           "items": {
             "type": "string"
