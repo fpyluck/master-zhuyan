@@ -1,90 +1,283 @@
 # Deep-research execution protocol
 
-Use this protocol as the durable form of MasterZhuyan's default research/modeling layer when source material is dense, multi-source, conflicting, or evidence-critical, or when the user explicitly requests evidence-grounded learning, systematic review, or citation-backed answers.
+Use this protocol as the durable AgenticResearch route for MasterZhuyan. It coordinates active acquisition, evidence curation, knowledge modeling, teaching composition, ProcessTracing, and longform integration through file-backed artifacts.
 
-For simple source intake, use `references/adaptive-router.md` section 3 and keep this protocol mental. Write these artifacts only when source complexity or traceability warrants it.
+Use this protocol for MasterZhuyan runs. Artifact size follows the research graph, but every run keeps the source, evidence, model, decision, citation, and continuation state that final claims need.
 
-## 1. Trigger conditions
+## 1. Default route and depth
 
-Write durable deep-research execution artifacts when any of the following apply:
+MasterZhuyan uses this AgenticResearch route by default. The following signals expand depth, add more agent passes, strengthen evidence work, or make the workbench more explicit:
 
-1. The user supplies three or more distinct source files or dense note sets.
-2. The material contains visible contradictions, multiple competing frameworks, or domain-sensitive precision claims (doses, legal thresholds, clinical criteria, engineering standards).
-3. The user asks for 系统整理, 循证, 研究综述, 文献综述, 证据, 系统梳理, evidence-based, or systematic coverage.
+1. The user asks for deep research, systematic synthesis, no token saving, agent delegation, evidence-grounded learning, or file-backed study assets.
+2. The user supplies dense note sets, a single source that deserves deep modeling, or multiple distinct source files.
+3. The material contains visible contradictions, multiple competing frameworks, or domain-sensitive precision claims.
 4. The topic requires separating current/guideline-dependent facts from stable conceptual knowledge.
-5. A chapter plan built without evidence verification would carry real risk if a precision anchor is wrong.
+5. The supplied material lacks a load-bearing definition, mechanism, prerequisite, comparator, example, contradiction resolution, or source basis needed for a strong teaching model.
+6. A chapter plan built without evidence verification would carry real risk if a precision anchor is wrong.
 
-For single-source or low-complexity requests, still use the research/modeling logic, but keep it mental and deliver through the normal longform container.
+For a single-source deep dive, use the same DeepResearch protocol. Smaller scopes may produce fewer artifacts, but direct integrator-only production is a recorded fallback after native agent/tool/worker failure, not a route selected because the topic looks simple.
 
-## 2. Phase sequence
+## 2. DeepResearch phase sequence
 
-Run silently. Each phase produces a locked artifact before the next phase begins. Do not draft chapters before the Knowledge Model is locked.
+Each canonical phase leaves the state the next canonical phase needs. Agents/sub-agents may run in parallel inside or across phases when their output paths are distinct and their results remain sidecars until the integrator promotes them.
 
-### Phase 1: Research planning
+### Phase 1: Contract and workbench
 
-Before reading sources, define what the research must answer.
+Maintain the canonical DeepResearch workbench and AgenticResearch sidecar area:
 
-Produce `notes/research_plan.md` using the contract in `references/deep-research-output-contracts.md` section 1.
+```text
+notes/process_trace.md
+notes/research_brief.md
+notes/research_tree.md
+notes/source_map.md
+notes/evidence_ledger.md
+notes/knowledge_model.md
+notes/chapter_plan.md
+notes/integrator_decisions.md
+notes/citation_audit.md
+notes/continuation_map.md
+notes/agent_outputs/
+```
 
-Minimum contents:
-1. Knowledge questions: the specific questions this research must answer.
-2. Source requirements: what source types are needed (guidelines, mechanisms, classifications, examples, exceptions).
-3. Uncertainty budget: how much uncertainty is acceptable given the domain and stakes.
-4. Completion criteria: when the evidence is sufficient to teach from.
-5. Research nodes: dynamic nodes chosen by the planner or integrator from knowledge questions, source structure, dependency order, contradiction risk, domain precision, and teaching value. Do not force fixed chunks, a fixed count, or a scored ranking gate. If a candidate map helps clarify scope, record it as optional planning context; expand, merge, or split nodes whenever the evidence or lesson plan benefits.
+`notes/research_brief.md` contains:
 
-Do not begin source intake until the research plan is written.
+```text
+topic_title:
+user_goal:
+primary_confusion:
+success_criteria:
+learner_bottleneck:
+source_map_ref:
+scope:
+research_questions:
+selected_spine:
+chapter_emphasis:
+must_preserve_details:
+precision_anchors:
+agent_fabric_plan:
+initial_continuation_branches:
+revision_reasons:
+```
 
-### Phase 2: Source intake and Evidence Ledger
+`notes/research_tree.md` contains the dynamic research tree:
 
-Read all supplied sources. For each source, build a source map entry (see `references/codex-execution.md` section 2). Then extract evidence claims into the Evidence Ledger.
+```text
+node_id:
+question:
+why_it_matters:
+source_need:
+owner:
+status: open | searching | reading | evidence_ready | modeled | retired | blocked
+evidence_ids:
+next_action:
+stop_condition:
+```
 
-Produce `notes/evidence_ledger.md` using the contract in `references/deep-research-output-contracts.md` section 2.
+Write `contract_built` into `notes/process_trace.md`.
 
-Rules:
-1. Every claim that will appear in a chapter must have a ledger entry.
-2. Mark confidence honestly: `high` only when the source is unambiguous; `med` when interpretation is needed; `low` when support is thin; `inferred` when no source supports it.
-3. When two sources contradict, create a `contradicted` entry for both. Do not silently pick one.
-4. Do not invent ledger entries. If a knowledge question cannot be answered from supplied material, record it as `missing`.
+Keep notes concise when the research graph is small, but keep canonical source, evidence, model, decision, and continuation state available before final promotion. When native sub-agent/tool/worker execution is unavailable or fails, record the concrete failure label (for example `agent_runtime_unavailable`, `agent_worker_failed`, or `tool_failed`) in `notes/process_trace.md` and `notes/integrator_decisions.md`, then produce a fallback/proposed artifact under `notes/agent_outputs/` for the same DeepResearch target.
 
-Do not lock the Knowledge Model until the Evidence Ledger is complete.
+### Phase 2: Active source acquisition
 
-### Phase 3: Knowledge Model
+Dispatch Source Scout agents from `references/agent-fabric.md` for acquisition nodes. The integrator performs acquisition directly only as a recorded fallback for a native agent/tool/worker failure and writes the same target artifact plus an integrator decision record.
 
-Build a structured representation of what is known, uncertain, and missing.
+Use active acquisition for:
 
-Produce `notes/knowledge_model.md` using the contract in `references/deep-research-output-contracts.md` section 3.
+```text
+missing definition
+missing mechanism
+missing prerequisite
+missing comparator
+missing example
+contradiction
+current/source-sensitive claim
+multimodal source gap
+```
 
-Rules:
-1. Every concept in the Knowledge Model must cite at least one Evidence Ledger entry.
-2. Misconceptions must include a repair anchor, not just a flag.
-3. Gaps must map back to their knowledge question in the Research Planner.
-4. Precision anchors (thresholds, doses, criteria, formulas) must reference their source entry directly.
+Each Source Scout writes:
 
-Do not begin chapter planning until the Knowledge Model is locked.
+```text
+notes/agent_outputs/source_scout/<agent_id>.md
+```
 
-### Phase 4: Chapter planning
+The integrator merges source entries into:
 
-Use `references/masterzhuyan-planning.md` section 1 with the Knowledge Model as primary input. The Knowledge Model replaces generic topic brainstorming: use its concepts, relationships, misconceptions, and precision anchors to fill the canvas fields.
+```text
+notes/source_map.md
+```
 
-Record `notes/chapter_plan.md` as in the normal longform workflow (`references/codex-execution.md` section 6).
+Write `source_acquisition` into `notes/process_trace.md`.
 
-### Phase 5: Chapter drafting
+Use this tool chain discipline:
 
-Use `references/masterzhuyan-output-contracts.md` for chapter module shapes. Each chapter may cite Evidence Ledger entries when flagging precision or uncertainty. Do not introduce source claims not present in the Evidence Ledger.
+```text
+search -> candidate source
+read/fetch/browser/OCR/MCP -> source card
+source card -> evidence card
+evidence card -> knowledge model claim
+knowledge model claim -> chapter sentence or marked limitation
+```
 
-### Phase 6: Verification pass
+Search retrieves candidates; reading creates source cards; source cards produce evidence. Unread, snippet-only, or partially read candidates stay in `notes/source_map.md` with `read_state`, attempted method, access time when available, failure reason, and next retrieval option. The Evidence Ledger receives claims only from read source cards, or from a snippet explicitly labeled as the studied source.
 
-Before merge, verify that:
-1. Every precision anchor in the chapters has a matching `accepted` Evidence Ledger entry.
-2. Every `contradicted` or `missing` ledger entry is either flagged in the relevant chapter or intentionally excluded with a reason in `notes/review.md`.
-3. No chapter contains a claim marked `inferred` without labeling it as inference in the text.
-4. The chapter plan and final draft answer the research brief's `primary_confusion` and satisfy its `success_criteria`; if not, revise the Knowledge Model or Chapter Plan before polishing.
+Source card fields:
 
-After this verification pass, rely on longform for container validation and merge discipline. Use `references/quality-gates.md` only for extra teaching/source risks that remain unresolved.
+```text
+source_id:
+title:
+source_type:
+access_method:
+retrieved_at:
+locator:
+read_state: full | partial | snippet_only | unavailable
+supports_questions:
+must_preserve:
+evidence_card_ids:
+limitations:
+failure_label:
+```
 
-## 3. Fallback
+### Phase 3: Evidence curation
 
-If Phase 1 or 2 fails because sources cannot be read, retrieval is unavailable for a current/high-risk claim, filesystem output is unavailable, or context budget cannot safely hold the chapter plan, write a limitation or handoff note and continue only with the portions that can still be file-backed and source-bounded. Do not replace the full learning deliverable with chat teaching.
+Dispatch Evidence Curator agents over source clusters. If a native agent/tool/worker failure forces sequential fallback, the integrator writes the Evidence Ledger directly and records that fallback. Evidence work follows `references/deep-research-output-contracts.md` section 4 `Extraction flow`: claim -> support state -> reference frame when needed -> integrator action for unavailable precision or frame.
 
-If Phase 3 produces a Knowledge Model with more gaps than accepted claims, tell the user what is missing before teaching from thin evidence.
+```text
+notes/agent_outputs/evidence_curator/<agent_id>.md
+```
+
+Curator outputs are candidate ledger entries. The integrator merges accepted, contradicted, inferred, and missing entries into:
+
+```text
+notes/evidence_ledger.md
+```
+
+Write `evidence_curation` into `notes/process_trace.md`.
+
+### Phase 4: Knowledge modeling
+
+Dispatch modeling agents for breadth, dissent, comparison, misconception repair, and mechanism repair:
+
+```text
+mechanism_modeler
+concept_graph_builder
+misconception_repairer
+comparison_builder
+```
+
+Outputs go to:
+
+```text
+notes/agent_outputs/<agent_type>/<agent_id>.md
+```
+
+The integrator merges model entries into:
+
+```text
+notes/knowledge_model.md
+```
+
+Write `knowledge_modeling` into `notes/process_trace.md`.
+
+### Phase 5: Chapter planning and teaching composition
+
+Create:
+
+```text
+notes/chapter_plan.md
+```
+
+`notes/chapter_plan.md` is the lesson plan produced from the locked Knowledge Model. It must include the learner bottleneck, selected core spine, reference frame when load-bearing, precision anchors, and one row for each intended knowledge chapter with `purpose`, `required_anchors`, `output_path`, and `completion_criteria`. Reading maps, evidence/source maps, safety boundaries, artifact inventories, and process summaries stay in `index.md`, `notes/*`, or the final delivery note unless promoted as substantive reference-frame or knowledge-overview content.
+
+Dispatch follows the Teaching Composer contract in `references/agent-fabric.md`: one agent per chapter row, with row-local `purpose`, `required_anchors`, `output_path`, `completion_criteria`, and relevant evidence/model context while the integrator owns cross-chapter coherence. If a native agent/tool/worker failure forces sequential fallback, the integrator drafts the assigned chapter target from the locked Knowledge Model and records the fallback:
+
+```text
+notes/agent_outputs/teaching_composer/<section_id>/<agent_id>.md
+```
+
+After `notes/chapter_plan.md` is stable, materialize these work packages when this script is the active longform carrier:
+
+```text
+python scripts/mz_longform.py materialize-chapter-agents --root <longform-root>
+```
+
+The integrator promotes chapter-ready content into:
+
+```text
+chapters/*.md
+```
+
+Write `chapter_composition` into `notes/process_trace.md`.
+
+### Phase 6: Integration, tracing, and panorama delivery
+
+Dispatch Trace Curator for agent contribution maps, citation state, continuation maps, and delivery metadata. If native runtime failure prevents that pass, record the failure label and have the integrator write the same trace artifacts through a fallback/proposed sidecar and decision record.
+
+Update:
+
+```text
+notes/integrator_decisions.md
+notes/citation_audit.md
+notes/continuation_map.md
+index.md
+```
+
+Merge longform:
+
+```text
+final/final_merged.md
+```
+
+Write `integration` into `notes/process_trace.md`.
+
+Before merge, write `notes/citation_audit.md`:
+
+```text
+claim_or_section:
+evidence_ids:
+source_ids:
+locator_check:
+support_state: supported | partial | inferred | contradicted | missing
+integrator_action: accept | revise | soften_claim | omit_claim | mark_unavailable | dispatch_agent | record_continuation
+```
+
+Any load-bearing claim, high-risk precision anchor, or contradiction controlling the user's main question with `missing` or `contradicted` citation support enters `integrator_action` as a merge blocker. Merge proceeds only after the claim has accepted evidence or an integrator decision records `soften_claim`, `omit_claim`, `mark_unavailable`, `dispatch_agent`, or `record_continuation` for the final teaching target.
+
+Before final merge, every chapter row's evidence-bearing `required_anchors` must be resolved by a Teaching Composer sidecar and a chapter-level citation audit row. Resolution means the anchor's evidence ID is used in the sidecar and tied to the chapter `output_path`, `chapter_id`, or `final/final_merged.md` in `notes/citation_audit.md`, or the audit/integrator decision records the action that keeps it out of the final teaching body.
+
+## 3. Continuation handling
+
+When a source, tool, or agent output is unavailable, record the missing item in `notes/process_trace.md` or `notes/integrator_decisions.md`, add an entry to `notes/continuation_map.md` when the gap is useful to resume, and continue integrating the artifacts already produced.
+
+When a Knowledge Model contains important gaps, dispatch Source Scout or Mechanism Modeler for the gap and record the result. If the gap remains, place it in `notes/continuation_map.md` with a concrete next agent handoff card.
+
+If one source, tool, or agent path is unavailable, record the unavailable path and continue through available artifacts when useful. A full file-backed completion claim requires the actual container artifacts; if file output is unavailable, provide a limitation note with the intended file-backed route, missing capability, and smallest useful next step.
+
+Continuation carries resumable work after the final claim is safe: a missing load-bearing definition, unsupported high-risk precision anchor, or unresolved contradiction that controls the user's main question first changes the final claim through accepted evidence or `soften_claim`, `omit_claim`, or `mark_unavailable`; only non-core or already-resolved gaps move unchanged to continuation.
+
+## 4. Agent loop and failure handling
+
+When an agent or integrator performs a research node, run the same compact loop:
+
+```text
+decide: pick the next node and tool/action from notes/research_tree.md
+act: search, read, extract, model, critique, draft, or audit
+observe: record source/evidence/result/failure
+update: revise research_tree, source_map, evidence_ledger, knowledge_model, or chapter_plan
+stop: node stop_condition met, node retired, or blocker recorded with next_action
+```
+
+Failure labels:
+
+```text
+agent_runtime_unavailable
+agent_worker_failed
+not_found
+access_blocked
+tool_failed
+source_partial
+contradicted
+insufficient_precision
+out_of_scope
+```
+
+Step, source, or runtime bounds keep the run inspectable, not exhaustive. When a bound stops a load-bearing node, the unresolved support state flows to `notes/integrator_decisions.md`; it can enter `notes/continuation_map.md` only after the affected final claim is evidenced, softened, omitted, or marked unavailable.
