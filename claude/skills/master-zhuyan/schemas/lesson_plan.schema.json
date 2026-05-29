@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://claude.local/master-zhuyan/lesson_plan.schema.json",
+  "$id": "https://codex.local/master-zhuyan/lesson_plan.schema.json",
   "title": "MasterZhuyan Lesson Plan",
-  "description": "Longform teaching plan that binds research evidence and knowledge model to chapters, deliverables, and review tasks.",
+  "description": "Longform teaching plan that lets the locked Knowledge Model decide knowledge chapters and binds evidence, reference frames, precision anchors, deliverables, and review tasks.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -29,8 +29,30 @@
       "type": "string",
       "description": "One or two sentences describing how this lesson should help the learner think better."
     },
+    "learner_bottleneck": {
+      "type": "string",
+      "description": "The learning failure the chapter sequence is built to repair: unknown definition, unclear mechanism, missing classification, weak judgment, poor recall, easy error, or missing precision."
+    },
+    "selected_spine": {
+      "type": "string",
+      "description": "Core teaching spine selected from the Knowledge Model, such as definition -> mechanism -> judgment -> handling -> boundary."
+    },
+    "precision_anchors": {
+      "type": "array",
+      "description": "Load-bearing thresholds, classifications, causes, contraindications, exceptions, formulas, criteria, and source-sensitive limits that must survive chapter drafting.",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "reference_frame": {
+      "type": "string",
+      "description": "The source-grounded baseline, default rule, comparator, unit/scale, version contract, nominal condition, historical starting point, ordinary meaning, or other frame needed to interpret deviations, exceptions, thresholds, risks, grades, comparisons, or trends.",
+      "default": ""
+    },
     "chapter_plan": {
       "type": "array",
+      "description": "Chapters that advance the learner's model. Delivery metadata (reading maps, source/evidence maps, safety boundaries, artifact inventories, process summaries) belongs in index.md or notes/*; include as a chapter only when it teaches a substantive reference frame or knowledge overview.",
       "items": {
         "$ref": "#/$defs/chapter"
       },
@@ -51,8 +73,9 @@
       },
       "default": []
     },
-    "chat_delivery": {
+    "delivery_note": {
       "type": "object",
+      "description": "Final chat note metadata only: created paths, reading order, validation state, limitations, one-sentence safety boundary when needed, and continuation. It must not carry teaching正文.",
       "additionalProperties": false,
       "properties": {
         "must_include": {
@@ -69,17 +92,17 @@
         }
       }
     },
-    "iteration_triggers": {
+    "revision_reasons": {
       "type": "array",
-      "description": "Plan-level reasons to return to Planner before drafting or merging.",
+      "description": "Plan-level reasons to revise before promoting chapters or merging.",
       "items": {
         "type": "string",
-        "enum": ["chapter_has_no_learning_value", "chapter_overlap", "missing_source_for_claim", "unresolved_contradiction", "unclear_audience", "deliverable_route_invalid"]
+        "enum": ["chapter_has_no_learning_value", "chapter_overlap", "metadata_misallocated_as_chapter", "missing_required_anchor", "missing_source_for_claim", "unresolved_contradiction", "unclear_audience", "deliverable_route_invalid"]
       },
       "default": []
     }
   },
-  "required": ["plan_id", "topic_title", "chapter_plan"],
+  "required": ["plan_id", "topic_title", "research_brief_ref", "knowledge_model_ref", "learner_bottleneck", "selected_spine", "chapter_plan", "deliverables"],
   "$defs": {
     "chapter": {
       "type": "object",
@@ -92,7 +115,8 @@
           "type": "string"
         },
         "purpose": {
-          "type": "string"
+          "type": "string",
+          "description": "What this chapter lets the learner understand, remember, judge, repair, or reuse."
         },
         "emphasis": {
           "type": "array",
@@ -111,6 +135,7 @@
         },
         "required_anchors": {
           "type": "array",
+          "description": "Reference frames, definitions, mechanisms, classifications, thresholds, causes, contraindications, exceptions, formulas, criteria, common errors, or source-sensitive limits this chapter must preserve.",
           "items": {
             "type": "string"
           },
@@ -121,13 +146,14 @@
         },
         "completion_criteria": {
           "type": "array",
+          "description": "Checkable criteria against the Knowledge Model and Evidence Ledger.",
           "items": {
             "type": "string"
           },
           "default": []
         }
       },
-      "required": ["chapter_id", "title", "purpose"]
+      "required": ["chapter_id", "title", "purpose", "input_refs", "required_anchors", "output_path", "completion_criteria"]
     },
     "deliverable": {
       "type": "object",
@@ -154,7 +180,7 @@
         "task_id": {
           "type": "string"
         },
-        "gate": {
+        "dimension": {
           "type": "string",
           "enum": ["delivery", "chapter_value", "coverage", "source_uncertainty", "teaching_value", "multi_agent", "prep_template", "taste"]
         },
@@ -166,7 +192,7 @@
           "enum": ["planner", "drafter", "reviewer", "integrator"]
         }
       },
-      "required": ["gate", "question"]
+      "required": ["dimension", "question"]
     }
   }
 }
