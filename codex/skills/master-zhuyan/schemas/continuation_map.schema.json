@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex.local/master-zhuyan/continuation_map.schema.json",
+  "title": "MasterZhuyan Continuation Map",
+  "description": "Open branches, blocked questions, deferred source work, and useful next study paths after final merge.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "map_id": {
+      "type": "string"
+    },
+    "branches": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/branch"
+      },
+      "default": []
+    }
+  },
+  "required": ["map_id", "branches"],
+  "$defs": {
+    "branch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "branch_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["open", "blocked", "deferred", "next_study", "resolved"]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "next_action": {
+          "type": "string"
+        },
+        "needed_source_or_artifact": {
+          "type": "string"
+        }
+      },
+      "required": ["branch_id", "status", "reason", "next_action"]
+    }
+  }
+}
