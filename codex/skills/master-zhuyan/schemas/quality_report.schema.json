@@ -1,14 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://codex.local/master-zhuyan/quality_report.schema.json",
-  "title": "MasterZhuyan Quality Report",
-  "description": "Validation contract for source fidelity, teaching value, longform completeness, and iteration decisions.",
+  "title": "MasterZhuyan Quality Trace Report",
+  "x-canonical-name": "quality_trace_report",
+  "description": "Legacy-named contract for quality tracing: source support, teaching value, artifact/container repair, integrator action, and continuation candidates.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
     "schema_version": {
       "type": "string",
-      "default": "1.0"
+      "default": "2.0"
     },
     "report_id": {
       "type": "string"
@@ -22,14 +23,14 @@
     "final_output_ref": {
       "type": "string"
     },
-    "overall_status": {
+    "overall_state": {
       "type": "string",
-      "enum": ["pass", "pass_with_notes", "revise", "blocked"]
+      "enum": ["strong", "partial", "needs_revision", "not_applicable"]
     },
-    "gate_results": {
+    "trace_results": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/gate_result"
+        "$ref": "#/$defs/trace_result"
       },
       "default": []
     },
@@ -40,24 +41,19 @@
       },
       "default": []
     },
-    "planner_iteration": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "required": {
-          "type": "boolean"
-        },
-        "reason": {
-          "type": "string"
-        },
-        "requested_updates": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        }
-      }
+    "integrator_actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/integrator_action"
+      },
+      "default": []
+    },
+    "continuation_candidates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/continuation_candidate"
+      },
+      "default": []
     },
     "known_limitations": {
       "type": "array",
@@ -70,25 +66,48 @@
       "type": "string"
     }
   },
-  "required": ["report_id", "overall_status"],
+  "required": ["report_id", "overall_state"],
   "$defs": {
-    "gate_result": {
+    "trace_result": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "gate": {
+        "dimension": {
           "type": "string",
-          "enum": ["delivery", "chapter_value", "coverage", "source_uncertainty", "teaching_value", "multi_agent", "prep_template", "taste"]
+          "enum": [
+            "delivery",
+            "chapter_value",
+            "coverage",
+            "source_uncertainty",
+            "teaching_value",
+            "multi_agent",
+            "prep_template",
+            "responsiveness",
+            "final_enhancement"
+          ]
         },
-        "status": {
+        "support_state": {
           "type": "string",
-          "enum": ["pass", "warn", "fail", "not_applicable"]
+          "enum": ["strong", "partial", "inferred", "missing", "contradicted", "not_applicable"]
         },
         "summary": {
           "type": "string"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "integrator_action": {
+          "$ref": "#/$defs/action_enum"
+        },
+        "continuation_ref": {
+          "type": "string"
         }
       },
-      "required": ["gate", "status"]
+      "required": ["dimension", "support_state"]
     },
     "finding": {
       "type": "object",
@@ -99,7 +118,7 @@
         },
         "severity": {
           "type": "string",
-          "enum": ["info", "minor", "major", "blocking"]
+          "enum": ["info", "minor", "major", "high_risk"]
         },
         "artifact_ref": {
           "type": "string",
@@ -108,14 +127,87 @@
         "issue": {
           "type": "string"
         },
+        "support_state": {
+          "type": "string",
+          "enum": ["strong", "partial", "inferred", "missing", "contradicted", "not_applicable"]
+        },
         "suggested_action": {
-          "type": "string"
+          "$ref": "#/$defs/action_enum"
         },
         "source_needed": {
+          "type": "string",
+          "enum": ["yes", "no", "unknown"]
+        },
+        "continuation_ref": {
           "type": "string"
         }
       },
-      "required": ["severity", "issue"]
+      "required": ["severity", "issue", "support_state"]
+    },
+    "integrator_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "action": {
+          "$ref": "#/$defs/action_enum"
+        },
+        "artifact_ref": {
+          "type": "string"
+        },
+        "result": {
+          "type": "string"
+        }
+      },
+      "required": ["action"]
+    },
+    "continuation_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "type": "string"
+        },
+        "topic": {
+          "type": "string"
+        },
+        "current_state": {
+          "type": "string"
+        },
+        "next_agent": {
+          "type": "string"
+        },
+        "input_artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "expected_output": {
+          "type": "string"
+        },
+        "core_relevance": {
+          "type": "string",
+          "enum": ["core", "non_core_extension"]
+        }
+      },
+      "required": ["topic", "current_state", "core_relevance"]
+    },
+    "action_enum": {
+      "type": "string",
+      "enum": [
+        "accept",
+        "revise",
+        "create_missing_artifact",
+        "dispatch_agent",
+        "soften_claim",
+        "omit_claim",
+        "mark_unavailable",
+        "record_continuation"
+      ]
     }
   }
 }
