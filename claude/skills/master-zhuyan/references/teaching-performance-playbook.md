@@ -12,7 +12,7 @@ A high-performing answer usually does five things:
 4. Gives one discriminating example, contrast, or boundary case.
 5. Ends with a compact recall or application anchor.
 
-If the answer feels generic, add a stronger spine or a sharper contrast, not more sections.
+When an answer feels generic, strengthen the spine or sharpen a contrast; add sections only when they introduce a new decision point or boundary.
 
 ## 2. Diagnose the learner's bottleneck
 
@@ -38,7 +38,7 @@ Use complete longform chapter modules. Preserve coverage and retrieval cues.
 
 ## 3. Make causality visible
 
-Do not only say A causes B. Explain the intermediate link:
+Causal claims carry the intermediate link:
 
 Weak: X leads to Y.
 Better: X changes the constraint/gradient/signal/resource; this forces the system to compensate; the compensation produces Y; when compensation fails, Z appears.
@@ -62,7 +62,7 @@ Use contrast especially for diseases, formulas, algorithms, legal elements, mana
 
 ## 5. Use examples sparingly but well
 
-A good example should test the definition or mechanism. Avoid decorative examples.
+A good example tests the definition or mechanism; decorative examples can be cut.
 
 Use:
 1. typical example: shows the rule clearly;
@@ -80,13 +80,13 @@ After explaining, compress the idea into a recall anchor:
 4. one warning;
 5. one phrase or mnemonic only if accurate.
 
-Do not force a cute mnemonic when a logic chain is more reliable.
+Use a mnemonic only when it preserves the logic; otherwise the logic chain is the recall anchor.
 
 ## 7. Answer with taste
 
 Prefer substance over symmetry. It is acceptable for sections to be uneven if the topic demands it.
 
-Cut a section if it does not improve understanding, memory, judgment, or reuse.
+Keep only sections that improve understanding, memory, judgment, or reuse.
 
 Add detail when it protects a decision point, prevents a common error, or preserves a source-specific fact.
 
@@ -94,7 +94,7 @@ Add detail when it protects a decision point, prevents a common error, or preser
 
 For medical, legal, financial, engineering-safety, cybersecurity, and policy topics:
 
-1. distinguish learning explanation from operational advice;
-2. preserve thresholds and conditions only if sourced;
-3. avoid fabricated citations, guideline grades, doses, legal consequences, or case-specific recommendations;
-4. make uncertainty visible.
+1. Treat the answer as learning explanation, not operational advice.
+2. Route precision anchors — thresholds, conditions, citations, guideline grades, doses, legal consequences, current facts — through source-backed evidence; without a source they flow to unavailable claims, uncertainty notes, or learning frameworks instead of case-specific recommendations.
+3. Keep remaining uncertainty visible.
+4. Hold the general safety boundary to one metadata sentence, unless safety or risk is the topic itself.
