@@ -2,9 +2,9 @@
 
 Use this protocol in repository, filesystem, or code-oriented environments.
 
-## 1. Inspect before answering
+## 1. Inspect Before Building The Asset
 
-Do not assume file contents from names alone. Use explicit inspection:
+Filenames are entry candidates only; file facts enter `notes/source_map.md` or chapter drafting only after explicit inspection:
 
 1. list files
 2. identify likely relevant files
@@ -18,9 +18,9 @@ find <root> -maxdepth 3 -type f
 rg -n "keyword" <root>
 sed -n '1,220p' <file>
 
-## 2. Source map format
+## 2. Source Map Format
 
-Use internally:
+For MasterZhuyan DeepResearch, write this as durable `notes/source_map.md`. Use it internally only for non-MasterZhuyan filesystem questions.
 
 file:
 role:
@@ -29,7 +29,7 @@ facts supported:
 gaps or uncertainty:
 output sections supported:
 
-Show this map only if the user asks.
+The final chat response stays path-focused; the map lives in the file asset.
 
 ## 3. Longform in Codex
 
@@ -42,38 +42,63 @@ Use $longform-composer when available. If not, use scripts/mz_longform.py.
 
 After writing, validate and merge. Return paths, not the full text.
 
+### DeepResearch workbench in Codex
+
+For MasterZhuyan DeepResearch runs, create this canonical workbench under the longform root before drafting canonical chapters. Use `notes/agent_outputs/` as the normal AgenticResearch sidecar area for agent/sub-agent outputs and recorded fallbacks:
+
+```text
+notes/process_trace.md
+notes/research_brief.md
+notes/research_tree.md
+notes/source_map.md
+notes/evidence_ledger.md
+notes/knowledge_model.md
+notes/chapter_plan.md
+notes/integrator_decisions.md
+notes/citation_audit.md
+notes/continuation_map.md
+notes/agent_outputs/
+```
+
+Use `references/agent-fabric.md` for dispatch cards. Use `references/process-tracing.md` for trace templates.
+
+Agent outputs are sidecars. Canonical content enters final merge only after the integrator promotes it into `chapters/*.md` or canonical notes.
+
 ## 4. Deep-research packages
 
-Use this section when the request is source-heavy, current, high-risk, multi-file, conflicting, evidence-critical, or explicitly asks for systematic/evidence-grounded learning. For ordinary stable concepts, keep research planning silent and proceed with normal longform; do not treat that as skipping the research/modeling layer.
+Use this section to keep the DeepResearch workbench coherent. Stable concepts can use a compact research graph and compact artifacts, but they still remain inside the DeepResearch longform route.
 
 Durable package options:
 
-1. `scripts/topic_research.py`: use when traceability matters. It creates or validates `framing_brief.md`, `tree.md`, `dispatch.md`, `agent_outputs/*.md`, `source_ledger.jsonl`, `claim_ledger.md`, `synthesis.md`, and `learning_path.md`.
-2. `scripts/learning_artifacts.py`: use for standalone knowledge cards or dense study reports that need `core_model`, `reasoning_chain`, `misconceptions`, `retrieval_hooks`, and `provenance`.
-3. `schemas/*.schema.json`: use when a custom artifact needs a stable contract: `source_map`, `research_brief`, `evidence_card`, `knowledge_model`, `lesson_plan`, or `quality_report`.
+1. `scripts/legacy/topic_research.py --allow-legacy-helper`: 5.26 fallback helper for tree and dispatch mechanics after an observable AgenticResearch/tool/worker failure, or for migration. Route its useful output as fallback/proposed artifacts for `notes/research_brief.md`, `notes/research_tree.md`, `notes/source_map.md`, `notes/evidence_ledger.md`, `notes/knowledge_model.md`, or `notes/agent_outputs/<agent_type>/<agent_id>.md`; canonical updates wait for an entry in `notes/integrator_decisions.md`.
+2. `scripts/legacy/learning_artifacts.py --allow-legacy-helper`: 5.26 fallback helper for core models, reasoning chains, misconceptions, retrieval hooks, and provenance after the agentic modeling path fails or leaves a weak model. Route useful content as proposed updates to `notes/knowledge_model.md`, `notes/chapter_plan.md`, validation notes, or bounded agent fallback artifacts; citation and continuation state must be updated before final merge.
+3. `schemas/*.schema.json`: use when a custom artifact needs a stable contract: `source_map`, `research_brief`, `evidence_card`, `knowledge_model`, `lesson_plan`, or the legacy-named quality trace report.
 
-Do not draft chapters before the research layer is locked. The dependency chain is:
+Keep canonical artifacts coherent in this order:
 
 ```text
-research_plan/source_map -> evidence_ledger -> knowledge_model -> chapter_plan -> chapters -> quality_report
+research_brief + research_tree + source_map -> evidence_ledger -> knowledge_model -> chapter_plan -> citation_audit -> chapters -> quality_trace
 ```
 
-If a precision anchor in a chapter lacks accepted evidence, fix the evidence, weaken or remove the claim, or mark it unavailable before merge.
+The chapter plan is the source of chapter intent; manifest and index are delivery projections derived from it. It must carry the learner bottleneck, selected spine, reference frame when load-bearing, precision anchors, and per-chapter `purpose`, `required_anchors`, and `completion_criteria`. Reading maps, source/evidence maps, safety boundaries, artifact inventories, and process notes stay in `index.md`, `notes/*`, or the final delivery note unless promoted as substantive reference-frame or knowledge-overview content.
 
-## 5. Avoid fake modularity
+Exploratory sidecars, section sketches, and agent notes may be produced earlier when they have a clear scope; the integrator promotes only supported material into canonical notes or chapters.
 
-Role names such as planner, researcher, teacher, worker, and reviewer are not real separate agents unless separate files, scripts, or passes are created. Make modularity real by producing explicit artifacts:
+If a precision anchor in a chapter lacks accepted evidence, fix the evidence, apply `soften_claim`, `omit_claim`, or `mark_unavailable` before merge.
 
-1. source map
-2. research brief or research plan
-3. evidence ledger or evidence cards
-4. knowledge model
-5. chapter plan
-6. chapter files
-7. validation log or quality report
-8. final merge
+## 5. Artifact-backed modularity
 
-For named prep templates, make the modularity real by creating or loading `.masterzhuyan/prep_templates/<name>.md` and recording the active template in the longform manifest or progress log when practical.
+Role labels, passes, and sub-agents earn their place by leaving a named artifact or fallback record that the integrator can accept, revise, reject, or use as fallback evidence. Route each distinct pass to the narrowest artifact it owns:
+
+1. scope, learner goal, and acquisition plan -> `notes/research_brief.md` or `notes/agent_outputs/contract_builder/<agent_id>.md`
+2. source acquisition or coverage -> `notes/source_map.md` or `notes/agent_outputs/source_scout/<agent_id>.md`
+3. research questions and stop conditions -> `notes/research_tree.md`
+4. claims, support state, contradictions, and precision anchors -> `notes/evidence_ledger.md` or `notes/citation_audit.md`
+5. teaching model and chapter contract -> `notes/knowledge_model.md` or `notes/chapter_plan.md`
+6. dispatch, trace updates, promotions, discarded outputs, and fallbacks -> `notes/process_trace.md`, `notes/integrator_decisions.md`, or `notes/continuation_map.md`
+7. teachable synthesis -> promoted `chapters/*.md` and `final/final_merged.md`
+
+For named prep templates, the loaded template lives in `.masterzhuyan/prep_templates/<name>.md`; record the active template in the longform manifest or progress log when practical.
 
 ## 6. Multi-agent and multi-pass longform
 
@@ -81,33 +106,27 @@ Entry condition: see `SKILL.md` Multi-agent and multi-pass execution.
 
 For planner schema fields, see `references/masterzhuyan-planning.md` section 4.
 
-Use agents and passes as soon as the integrator can give them a clear bounded artifact. The boundary can be a stable source cluster, research node, lens question, check scope, section draft, or explicit output path; it does not require the whole chapter plan to be finished before useful exploratory or evidence work begins. Create and update the planning layer as the work becomes stable:
+Use agents/sub-agents and passes as soon as the integrator can give them a clear bounded artifact. The boundary can be a stable source cluster, research node, lens question, check scope, section draft, or explicit output path; it does not require the whole chapter plan to be finished before useful exploratory or evidence work begins. Create and update the planning layer as the work becomes stable:
+
+When using Agent Fabric, write one dispatch card per agent in `notes/process_trace.md` or `notes/agent_outputs/<agent_type>/<agent_id>.md`. Record every canonical promotion in `notes/integrator_decisions.md`.
 
 1. `notes/source_map.md`: canonical source facts, gaps, contradictions, and uncertainty.
-2. `notes/research_plan.md` or `notes/research_brief.md`: learner goal, questions, source strategy, selected spine, completion criteria, and iteration triggers.
+2. `notes/research_brief.md`: learner goal, assumed scope, primary confusion, source strategy, selected spine, success criteria, and continuation seeds.
 3. `notes/evidence_ledger.md`: claim-to-source entries for load-bearing definitions, mechanisms, formulas, thresholds, examples, contradictions, gaps, and precision anchors.
 4. `notes/knowledge_model.md`: concepts, relationships, mechanism chain, comparisons, memory anchors, easy errors, and transfer boundaries.
-5. `notes/chapter_plan.md`: selected teaching spine, chapter order, `section_id` list, and non-parallel notes.
-6. `notes/section_map.md`: one row per worker brief with `split_type`, artifact id, title or question, allowed sources, required anchors, output path, and owner.
+5. `notes/chapter_plan.md`: selected teaching spine and lesson-plan rows with `purpose`, `required_anchors`, `output_path`, and `completion_criteria` for each intended chapter. Worker-boundary details and non-chapter-pass exceptions live in `references/agent-fabric.md` and `references/multi-agent-patterns.md`.
 
-If a worker boundary cannot be stated clearly, keep that part with the integrator until it can. If a later artifact such as `notes/source_map.md`, `notes/evidence_ledger.md`, `notes/knowledge_model.md`, or `notes/chapter_plan.md` cannot be stabilized, continue with the bounded portions that remain useful and record the fallback or unresolved gap in `logs/progress.md` or `notes/review.md`.
+A worker boundary is ready when the dispatch card can name scope, output path, completion signal, and canonical targets; until then, the integrator owns that part. If a later artifact such as `notes/source_map.md`, `notes/evidence_ledger.md`, `notes/knowledge_model.md`, or `notes/chapter_plan.md` cannot be stabilized, continue with the bounded portions that remain useful and record the fallback in `notes/process_trace.md`, the decision in `notes/integrator_decisions.md`, and the unresolved gap in `notes/continuation_map.md`.
 
-Worker rules:
+Artifact-flow contract:
 
-1. A worker may write only the assigned `section_id`, `source_id`, `lens_id`, `check_id`, or artifact.
-2. A worker may read the available source map, research brief, and chapter plan. It may suggest changes in its own artifact, but canonical planning changes belong to the integrator.
-3. A worker may add local teaching examples only as synthesis or inference, not as new source facts.
-4. A worker must not resolve contradictions, change the selected spine, widen chapter scope, or edit canonical `chapters/*.md` unless explicitly assigned that file.
-5. Worker drafts go under `notes/worker-drafts/`, `notes/source-drafts/`, `notes/lens-drafts/`, or `notes/checks/` according to `references/multi-agent-patterns.md`.
-
-Integrator rules:
-
-1. Promote worker drafts into the manifest-listed `chapters/*.md`; only these chapter files are canonical merge input.
-2. Record conflicts, missing drafts, source gaps, and revisions in `notes/review.md`.
-3. Run pre-merge checks on chapters, merge through the normal longform path, then run the final quality check on `final/final_merged.md`.
-4. If a worker fails, times out, or omits its artifact, fall back to sequentially producing that `section_id` and record the fallback in `notes/review.md`.
-5. Do not add workers or passes when their likely output is a duplicate summary, an ungrounded opinion, or a review with no named artifact to resolve.
+1. Worker scope is an assigned `section_id`, `source_id`, `lens_id`, `check_id`, or artifact path. The worker reads available source map, research brief, evidence ledger, knowledge model, and chapter plan as context, then writes the assigned output under `notes/agent_outputs/<agent_type>/<agent_id>.md` or an explicit Agent Fabric path such as `notes/agent_outputs/teaching_composer/<section_id>/<agent_id>.md`. Workers may name canonical targets; canonical note or chapter edits are written by the integrator after an accept/revise/reject decision.
+2. Worker output may contain scoped findings, drafts, local teaching examples labeled as synthesis or inference, and proposed planning changes. It remains sidecar material until the integrator accepts, revises, rejects, or uses it as fallback evidence.
+3. Canonical changes flow through the integrator. The integrator records conflicts, missing drafts, source gaps, promotions, discarded outputs, and revisions in `notes/integrator_decisions.md`, then promotes supported material into canonical notes or promoted `chapters/*.md`.
+4. Final merge uses only promoted chapter files after pre-merge quality tracing; run the final quality trace on `final/final_merged.md`.
+5. Worker failure, timeout, or omitted artifact flows to `notes/process_trace.md`; the integrator sequentially produces the assigned target when useful and records unresolved branches in `notes/continuation_map.md`.
+6. A pass counts as agentic only when it leaves a named artifact with scope, output path, and completion criteria that the integrator can accept, revise, reject, or use as fallback evidence.
 
 ## 7. Failure handling
 
-If a tool, file, or companion skill is unavailable, state the limitation briefly and use the fallback path. Do not silently skip file-backed longform. If the user explicitly requests no files, brief chat, or stopped file output, or files are unavailable, provide only a delivery, limitation, or handoff note rather than a full chat teaching substitute.
+If a tool, file, or companion skill is unavailable, state the limitation and keep the intended file-backed DeepResearch route explicit. If the user requests stopped file output, or files are unavailable, provide a limitation note that preserves the intended route, current progress, missing capability, source/uncertainty state, and smallest useful next step as the recoverable state, not a self-contained teaching document.
