@@ -1,24 +1,28 @@
 # MasterZhuyan longform chapter modules
 
-These modules describe chapter content inside the default longform deliverable. They are not output routes. Memory, understanding, comparison, review, and error-repair requests all produce the same file-backed container. Chat is reserved for delivery notes, limitations, and coordination.
+These modules describe chapter content inside the default longform deliverable. They are not output routes. Memory, understanding, comparison, review, and error-repair requests all use the same research-to-teaching spine; file-backed longform is the durable surface. Chat is only for delivery notes, limitation reports, and continuation coordination around that asset.
 
 ## Global chapter rules
 
 1. Use Markdown inside generated `.md` files.
 2. Keep every chapter independently useful: purpose, core content, examples or applications, easy errors, and boundaries where relevant.
-3. Preserve source-grounded facts, numbers, thresholds, formulas, criteria, examples, warnings, and uncertainty labels.
+3. Preserve source-grounded facts, numbers, thresholds, formulas, criteria, examples, warnings, uncertainty labels, and any reference frame needed to interpret deviations, grades, risks, trends, or exceptions.
 4. If source material visibly contradicts itself, flag the contradiction before synthesis and separate source facts from corrected or uncertain framing.
-5. Do not invent missing details. When a needed point is absent, write: 原始材料未提供，不能确定。
-6. Longform does not mean padding. Remove sections that do not improve understanding, memory, judgment, or reuse.
-7. If a named prep template is active, let it tune the prose and emphasis, but do not paste the template or force its full outline into every chapter.
-8. Use `后续知识拓展` only as a tail chapter or final section generated from the overall lesson plan and merged synthesis. Do not repeat it inside every chapter.
-9. Do not add decorative chapter endings such as “下一章怎么接” unless they teach a prerequisite handoff, contrast, transfer point, or next-study reason.
+5. Absent needed details take one of three paths: omit if peripheral; mark unavailable (`原始材料未提供，不能确定。`) if expected; or carry as labeled inference only when the Evidence Ledger already marks the claim as `inferred`. Anything not covered by one of these three paths does not enter the chapter.
+6. Keep only sections that improve understanding, memory, judgment, or reuse.
+7. If a named prep template is active, let its useful biases tune prose and emphasis; keep template content in the local template file or `notes/prep_template.md`, and let `chapter_plan` choose only the ingredients that serve the current chapter purpose.
+8. `后续知识拓展` is planned once and rendered at the tail as a final chapter or final section when the merged synthesis shows transfer, adjacent concepts, open questions, or next-study value.
+9. End each chapter on its own purpose; include a bridge such as “下一章怎么接” only when it teaches a prerequisite handoff, contrast, transfer point, or next-study reason.
+
+## Module contract
+
+The modules below are ingredient pools, not fixed outlines. `chapter_plan` chooses only the sections that serve the chapter purpose, renames or merges them freely, and may omit any ingredient that would add padding. Repeated source facts should flow into the first chapter where they become necessary for understanding, memory, comparison, error repair, or judgment.
 
 ## Memory chapter module
 
 Use this module for 【记忆】, 帮我记, 怎么记, 复习, 考点, 高频, 背诵, 口诀, or exam recall signals.
 
-Possible ingredients. Do not require these headings or all items; `chapter_plan` decides the actual sections:
+Ingredients:
 
 1. 核心定位
    - 它是什么
@@ -26,7 +30,7 @@ Possible ingredients. Do not require these headings or all items; `chapter_plan`
    - 最重要的记忆价值
 
 2. 记忆主干
-   - 3-8 个核心点
+   - 按章节目的选择若干核心点
    - 每个核心点给关键词、核心含义、适用场景、重要性
 
 3. 必须记住的细节
@@ -47,10 +51,10 @@ Possible ingredients. Do not require these headings or all items; `chapter_plan`
 
 Use this module for 【理解】, 为什么, 原理, 机制, 讲懂, 解释, 推导, 判断逻辑, or application-logic signals.
 
-Possible ingredients. Do not require these headings or all items; `chapter_plan` decides the actual sections:
+Ingredients:
 
 1. 先给结论
-   - 3-5 条真正能支撑理解的结论
+   - 先给几条真正能支撑理解的结论
 
 2. 这个知识点在解决什么问题
    - 没有它会困惑在哪里
@@ -76,7 +80,7 @@ Possible ingredients. Do not require these headings or all items; `chapter_plan`
 
 Use this module for 对比、区别、鉴别、怎么区分、A 与 B, or confusing-neighbor signals.
 
-Possible ingredients. Do not require these headings or all items; `chapter_plan` decides the actual sections:
+Ingredients:
 
 1. 一句话先分开
    - 用最短句给决定性区别
@@ -101,7 +105,7 @@ Possible ingredients. Do not require these headings or all items; `chapter_plan`
 
 Use this module for 易错点、陷阱、容易混淆、错题、风险、边界, and high-stakes caution signals. Include it by default when the topic is exam-facing, professional, safety-sensitive, or source-heavy.
 
-Possible ingredients. Do not require these headings or all items; `chapter_plan` decides the actual sections:
+Ingredients:
 
 1. 易错点
    - 错误说法或错误操作
@@ -119,29 +123,29 @@ Possible ingredients. Do not require these headings or all items; `chapter_plan`
    - 不能外推到哪里
    - 哪些信息缺失时不能下结论
 
-## Delivery or limitation note module
+## Delivery or boundary note module
 
-Use only after file-backed longform is created, blocked, or intentionally stopped by the user.
+Triggers when file-backed longform is created, unavailable, or intentionally stopped.
 
-Shape:
-1. created paths, reading order, validation status, and known limitations; or
-2. brief reason the file-backed deliverable could not be produced, plus the smallest useful next step.
+State → output shape:
+- **created**: created paths, reading order, validation status, known limitations
+- **unavailable / stopped**: preserved work, missing capability, smallest continuation step
 
-Do not use this module to replace the longform learning deliverable with a full chat explanation.
+The delivery note carries package status. For high-risk topics, one concise safety boundary sentence belongs here unless the user asked for a safety-focused lesson.
 
 ## 后续知识拓展 tail module
 
 Use at the end when the topic benefits from adjacent concepts, transfer paths, prerequisite repairs, next-study sequencing, open questions, or practice directions.
 
-Possible tail ingredients. Do not require these headings or all items; the merged synthesis decides the actual section:
+Tail ingredients:
 
 1. 还能往哪里学
-   - 2-5 个 genuinely useful adjacent topics or next steps
+   - a few genuinely useful adjacent topics or next steps, sized by transfer value rather than a fixed count
 
 2. 为什么接这些
-   - each item should connect to the merged lesson's mechanisms, contrasts, examples, or application boundary
+   - each item should connect to the merged lesson's mechanisms, contrasts, examples, or application boundary; items without that link stay out of the tail
 
 3. 学的时候先抓什么
    - the first question, prerequisite, or trap to watch for
 
-Do not use this as a decorative closing or a generic bibliography.
+Each tail item names the next object of study, why it follows from this lesson, and what to watch first.
