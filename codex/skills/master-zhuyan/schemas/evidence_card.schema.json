@@ -10,7 +10,7 @@
       "type": "string",
       "default": "1.0"
     },
-    "card_id": {
+    "claim_id": {
       "type": "string"
     },
     "source_id": {
@@ -26,7 +26,7 @@
     },
     "evidence_type": {
       "type": "string",
-      "enum": ["definition", "mechanism", "classification", "formula", "threshold", "procedure", "example", "warning", "exception", "case", "quote", "data", "counterpoint", "other"]
+      "enum": ["definition", "mechanism", "classification", "formula", "threshold", "procedure", "step", "example", "warning", "exception", "risk", "contrast", "case", "quote", "data", "counterpoint", "other"]
     },
     "source_text": {
       "type": "string",
@@ -37,11 +37,15 @@
     },
     "confidence": {
       "type": "string",
-      "enum": ["high", "medium", "low", "unknown"]
+      "enum": ["high", "medium", "med", "low", "inferred", "unknown"]
+    },
+    "support_state": {
+      "type": "string",
+      "enum": ["strong", "partial", "inferred", "contradicted", "missing"]
     },
     "stance": {
       "type": "string",
-      "enum": ["supports", "qualifies", "contradicts", "context"]
+      "enum": ["supports", "qualifies", "contradicts", "context", "missing"]
     },
     "teaching_use": {
       "type": "array",
@@ -73,5 +77,5 @@
       "default": []
     }
   },
-  "required": ["card_id", "source_id", "claim"]
+  "required": ["claim_id", "source_id", "locator", "claim", "evidence_type", "confidence", "support_state", "stance", "teaching_use"]
 }
