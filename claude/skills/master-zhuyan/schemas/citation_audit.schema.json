@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex.local/master-zhuyan/citation_audit.schema.json",
+  "title": "MasterZhuyan Citation Audit",
+  "description": "Claim-level support check before final DeepResearch promotion.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "audit_id": {
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/item"
+      },
+      "default": []
+    }
+  },
+  "required": ["audit_id", "items"],
+  "$defs": {
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "claim_or_section": {
+          "type": "string"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "locator_check": {
+          "type": "string"
+        },
+        "support_state": {
+          "type": "string",
+          "enum": ["supported", "partial", "inferred", "contradicted", "missing"]
+        },
+        "integrator_action": {
+          "type": "string",
+          "enum": ["accept", "revise", "soften_claim", "omit_claim", "mark_unavailable", "dispatch_agent", "record_continuation"]
+        }
+      },
+      "required": ["claim_or_section", "evidence_ids", "source_ids", "locator_check", "support_state", "integrator_action"]
+    }
+  }
+}
